@@ -1,1 +1,16 @@
-Instructions For Simulation
+xcorr文件名前缀为带有相关运算的程序
+其他如能量积分等无明确前缀
+
+可利用NOTEPAD++的“在文件中查找”进行跨文件搜索
+pic001-008 在 "2014.12真延时阵列的仿真（16阵元，已整理）.ppt" 中
+pic011 在 "近场/2015.05jk-yxw.ppt" 中
+
+其他对应关系
+\0仿真结果小结以及公式推导\report
+能量积分与带宽	supVSbw.m
+能量积分与阵元数	supVSnumINenergy.m
+相关与带宽	xcorrsupsweep.m
+相关与阵元数	xcorrsupsweep.m
+栅瓣抑制2_16阵元_4G带宽_10G载波_相关	xcorrmaxVSdegreePLOT
+栅瓣抑制平方	xcorrmaxVSdegreePLOT.m
+
