@@ -5,9 +5,9 @@
 
 clear
 
-aimdgr=45.5;
+aimdgr=45;
 N=16;
-d=0.065;
+d=0.03;
 drgsee0=-90:1:90;
 % engp=[];
 % for drgsee=drgsee0
@@ -24,6 +24,6 @@ for drgsee=drgsee0
     [~,~,~,~, engin]=xcorrTTDarrayr1_near( aimdgr, drgsee, 0,N,d);
     engi=[engi engin];
 end
-
-plot(drgsee0,engi);
+enginor=engi/max(engi);
+plot(drgsee0,10*log10(enginor));
 hold on;

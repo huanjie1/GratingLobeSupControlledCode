@@ -4,7 +4,7 @@
 
 clear
 
-aimdgr=60;
+aimdgr=-45;
 N=16;
 d=0.03;
 drgsee0=-90:1:90;
@@ -23,6 +23,6 @@ for drgsee=drgsee0
     xcormaxn=xcorrTTDarrayr1_near( aimdgr, drgsee, 0,N,d);
     xcormax=[xcormax xcormaxn];
 end
-
-plot(drgsee0,xcormax,'linewidth',2,'color','y');
+xcormaxnor=xcormax./max(xcormax);
+plot(drgsee0,20*log10(xcormaxnor),'linewidth',2,'color','b');
 hold on;

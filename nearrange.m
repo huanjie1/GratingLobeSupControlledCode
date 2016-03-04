@@ -3,8 +3,8 @@ function [ delaytime ] = nearrange( seeangle, aimangle, d, arraynum, c, roomrang
 % pic011
 % 非远场距离计算，偶数阵元；位置关系参考 pic011a
 % nearrange( seeangle, aimangle, d, arraynum, c);
-if nargin<7, offcenter=0.1;end
-if nargin<6, roomrange=10;end
+if nargin<7, offcenter=0;end
+if nargin<6, roomrange=3;end
 if nargin<5, c=3e8;end
 
 % 接收点坐标

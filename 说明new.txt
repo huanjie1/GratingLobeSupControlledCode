@@ -14,3 +14,4 @@ pic011 在 "近场/2015.05jk-yxw.ppt" 中
 栅瓣抑制2_16阵元_4G带宽_10G载波_相关	xcorrmaxVSdegreePLOT
 栅瓣抑制平方	xcorrmaxVSdegreePLOT.m
 
+antenna_element.MAT文件为用于天线频率响应插值的数据，是VNA的测量结果(\1124VNA\1ele10with50)，用于生成其的代码文件为elementpatternread.m
