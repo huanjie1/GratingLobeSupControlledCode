@@ -9,7 +9,7 @@ centerfreq=10e9;
 centerlambda=c/centerfreq;
 d0=1*centerlambda;
 
-spacingdia=1*0.00011*diffindex.^2;
+spacingdia=1*0.00011*diffindex.^2;%deviation from even spacing
 spacings=spacingdia-(min(spacingdia)+max(spacingdia))/2+d0;
 if sum(spacings<0)>0
     error('wrong spacingdia');
@@ -17,7 +17,7 @@ end
 xposition0=[0 cumsum(spacings)];
 xposition=xposition0-(min(xposition0)+max(xposition0))/2;
 figure;stem(xposition,max(spacings)*ones(1,length(xposition)));hold on
-plot(xposition,[0 spacings])
+plot(xposition,[spacings(1) spacings])
 
 aimdegree0=00;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
