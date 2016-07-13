@@ -9,17 +9,26 @@ centerfreq=10e9;
 centerlambda=c/centerfreq;
 d0=1*centerlambda;
 
-spacingdia=1*0.00011*diffindex.^2;%deviation from even spacing
-spacings=spacingdia-(min(spacingdia)+max(spacingdia))/2+d0;
+devimode='squ';
+% devimode='squ';
+
+if strcmp(devimode,'squ')
+    spacingdia=1*0.00020*diffindex.^2;%deviation from even spacing
+    spacings=spacingdia-(min(spacingdia)+max(spacingdia))/2+d0;
+else
+    spacings=randn(1,N)*d0*0.2+d0;
+end
+
+
 if sum(spacings<0)>0
     error('wrong spacingdia');
 end
 xposition0=[0 cumsum(spacings)];
 xposition=xposition0-(min(xposition0)+max(xposition0))/2;
 figure;stem(xposition,max(spacings)*ones(1,length(xposition)));hold on
-plot(xposition,[spacings(1) spacings])
+plot(linspace(-max(xposition),max(xposition),length(spacings)),spacings)
 
-aimdegree0=00;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+aimdegree0=45;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 NN=8001;
 freqaxis=linspace(-40e9,40e9,NN);
@@ -34,8 +43,8 @@ sigt1=sigeneratorfor2d( t,  'gaud0', 10e9, 10e9 );
 figure;plot(t,sigt1);
 title('sig waveform');
 
-dgrsection=6
+dgrsection=45;
 freqsection=10e9;
 
-arrayfactorangFORgeneral( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1, 1 );
+arrayfactorangFORgeneral( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1, 3 );
 
