@@ -22,31 +22,47 @@ NN=length(w);
 % arrayresponse=arrayresponse0;
 
 lambda0=1550e-9;
-lc=1550.1e-9;
+lc=1551e-9;
 
-d0=400;%ps/nm
+% d0=400;%ps/nm
+% b2=-lambda0^2/2/pi/c*d0/1e12*1e9;%1/s/s
+% b1=0;
+% b3=0;
+% 
+% w0=2*pi*c/lambda0;
+% wc=(w0+xposition*sin(aimtheta0)/c/b2).';
+% 
+% T= b1 +  b2*(wc-w0) + 1/2*b3*(wc-w0).^2;
+% D=   1/2*b2         + 1/2*b3*(wc-w0)  ;
+% G=                    1/6*b3          ;
+
+
+
+w0=2*pi*c/lambda0;
+wc=2*pi*c/lc;
+d0=(100+xposition*sin(aimtheta0)/c/(wc-w0)/(-lambda0^2)*2*pi*c*1e12/1e9).';%ps/nm
 b2=-lambda0^2/2/pi/c*d0/1e12*1e9;%1/s/s
 b1=0;
 b3=0;
-
-w0=2*pi*c/lambda0;
-wc=(w0+xposition*sin(aimtheta0)/c/b2).';
-
-T= b1 +  b2*(wc-w0) + 1/2*b3*(wc-w0).^2;
+T= b1 +  b2*(wc-w0) + 1/2*b3*(wc-w0)^2;
 D=   1/2*b2         + 1/2*b3*(wc-w0)  ;
 G=                    1/6*b3          ;
+
+
+
+
 
 modindex=0.1;
 AA=-1i*besselj(1,modindex);
 BB= 1 *besselj(0,modindex);
 CC= 1i*besselj(1,modindex);
 
-beat1cenv=conj(AA)*BB* exp(1i* (-T*w + D*w.^2 - G*ones(length(wc),1)*w.^3) )./(ones(length(wc),1)*[1i*ones(1,4000) 1 -1i*ones(1,4000)]);%complex envelop
-% beat1cenv=conj(AA)*BB* exp(1i* (-T*w + D*w.^2 - G*ones(length(wc),1)*w.^3) )/(-1i);
-% beat1cenv(:,1:floor(NN/2))=conj(beat1cenv(end:-1:1,1:floor(NN/2)));
-beat2cenv=conj(BB)*CC* exp(1i* (-T*w - D*w.^2 - G*ones(length(wc),1)*w.^3) )/(-1i);%complex envelop
+wr=w((NN-1)/2+1:NN);
+beat1cenv=conj(AA)*BB* exp(1i* (-T*wr + D*wr.^2 - G*ones(length(xposition),1)*wr.^3) )/(-1i);%complex envelop
+beat2cenv=conj(BB)*CC* exp(1i* (-T*wr - D*wr.^2 - G*ones(length(xposition),1)*wr.^3) )/(-1i);%complex envelop
 
-arrayresponse=beat1cenv+0*beat2cenv;
+arrayresponser=beat1cenv+1*beat2cenv;
+arrayresponse=[conj(arrayresponser(:,end:-1:2)) arrayresponser];
 
 
 
