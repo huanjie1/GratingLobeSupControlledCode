@@ -13,10 +13,10 @@ devimode='squ';
 % devimode='squ';
 
 if strcmp(devimode,'squ')
-    spacingdia=1*0.00020*diffindex.^2;%deviation from even spacing
+    spacingdia=1*0.0000*diffindex.^2;%deviation from even spacing
     spacings=spacingdia-(min(spacingdia)+max(spacingdia))/2+d0;
 else
-    spacings=randn(1,N)*d0*0.2+d0;
+    spacings=randn(1,N-1)*d0*0.2+d0;
 end
 
 
@@ -39,12 +39,14 @@ dgraxis=linspace(-90,90,721);
 
 % sigt1=cos( 2*pi*10e9*t + pi*10e9/(ts*NN)*t.^2);
 % sigt1=cos( 2*pi*10e9*t).* exp(-(t/0.1e-9).^2);
-sigt1=sigeneratorfor2d( t,  'gaud0', 10e9, 10e9 );
+sigt1=sigeneratorfor2d( t,  'lfm', 10e9, 10e9 );
 figure;plot(t,sigt1);
 title('sig waveform');
 
 dgrsection=45;
 freqsection=10e9;
 
-arrayfactorangFORgeneral( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1, 3 );
+% arrayfactorangFORgeneral( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1, 1 );
+arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1, 4 );
+
 
