@@ -2,7 +2,7 @@
 % 绘制二维阵列因子
 % 调用arrayfactorangFORgeneral.m，
 clear
-N=16;
+N=4;
 c=299792458;
 diffindex=0:(N-2);
 centerfreq=10e9;
@@ -28,7 +28,7 @@ xposition=xposition0-(min(xposition0)+max(xposition0))/2;
 % figure;stem(xposition,max(spacings)*ones(1,length(xposition)));hold on
 % plot(linspace(-max(xposition),max(xposition),length(spacings)),spacings)
 
-aimdegree0=60;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+aimdegree0=-40;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 NN=8001;
 freqaxis=linspace(-40e9,40e9,NN);
@@ -40,15 +40,15 @@ dgraxis=linspace(-90,90,721);
 
 % sigt1=cos( 2*pi*10e9*t + pi*10e9/(ts*NN)*t.^2);
 % sigt1=cos( 2*pi*10e9*t).* exp(-(t/0.1e-9).^2);
-sigt1=sigeneratorfor2d( t,  'lfm', 10e9, 10e9 );
+sigt1=sigeneratorfor2d( t,  'lfm', 4e9, 10e9 );
 % figure;plot(t,sigt1);
 % title('sig waveform');
 
-dgrsection=-55;
+dgrsection=-40;
 freqsection=10e9;
 
 % arrayfactorangFORgeneral( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1, 1 );
-arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1, 0, 5 );
+arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1,0, 5 );
 
 
 

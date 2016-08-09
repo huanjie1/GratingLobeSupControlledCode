@@ -20,8 +20,8 @@ theta=dgraxis/180*pi;
 NN=length(w);
 antennanum=length(xposition);
 
-window1=hamming(antennanum)*ones(1,NN);
-
+% window1=hamming(antennanum)*ones(1,NN);
+window1=rectwin(antennanum)*ones(1,NN);
 
 if 0==strunum %ideal TTD
     arrayresponse=exp(1i*(-xposition*sin(aimtheta0)/c).'*w);
@@ -33,7 +33,7 @@ if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
     w0=2*pi*c/lambda0;
     
     if 1==strunum  % multi-wavelength
-        d0=400;%ps/nm
+        d0=300;%ps/nm
         b2=-lambda0^2/2/pi/c*d0/1e12*1e9;%1/s/s
         b1=0;
         b3=0;
@@ -43,10 +43,10 @@ if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
     end
 
     if 2==strunum   % multi-DISP, master:wavelength 
-        lc=1552e-9;
+        lc=1550.5e-9;
         wc=2*pi*c/lc;
         % bias of d0 would lower the some of the peaks of theta section
-        d0=(100+xposition*sin(aimtheta0)/c/(wc-w0)/(-lambda0^2)*2*pi*c*1e12/1e9).';%ps/nm
+        d0=(000+xposition*sin(aimtheta0)/c/(wc-w0)/(-lambda0^2)*2*pi*c*1e12/1e9).';%ps/nm
         b2=-lambda0^2/2/pi/c*d0/1e12*1e9;%1/s/s
         b1=0;
         b3=0;
@@ -54,8 +54,8 @@ if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
     end
 
     if 3==strunum   % multi-DISP, master:DISP
-        dstart=-300;
-        dend=300;
+        dstart=-600;
+        dend=600;
         d0=((xposition-xposition(1))/(xposition(end)-xposition(1))*(dend-dstart)+dstart).';%ps/nm
         b2=-lambda0^2/2/pi/c*d0/1e12*1e9;%1/s/s
         b1=0;
