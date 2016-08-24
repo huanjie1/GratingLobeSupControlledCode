@@ -2,7 +2,7 @@
 % 绘制二维阵列因子
 % 调用arrayfactorangFORgeneral.m，
 clear
-N=4;
+N=16;
 c=299792458;
 diffindex=0:(N-2);
 centerfreq=10e9;
@@ -40,7 +40,7 @@ dgraxis=linspace(-90,90,721);
 
 % sigt1=cos( 2*pi*10e9*t + pi*10e9/(ts*NN)*t.^2);
 % sigt1=cos( 2*pi*10e9*t).* exp(-(t/0.1e-9).^2);
-sigt1=sigeneratorfor2d( t,  'lfm', 4e9, 10e9 );
+sigt1=sigeneratorfor2d( t,  'lfm', 2e9, 10e9 );
 % figure;plot(t,sigt1);
 % title('sig waveform');
 

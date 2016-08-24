@@ -139,9 +139,14 @@ if fignum>3
     %%%% pay attention to the order of ifftshift and ifft
     sigt1out=ifft(ifftshift(sigf1out,2),NN,2);
     
+    
     energypatten2=sum(abs(sigt1out).^2,2);
-    figure;plot(theta/pi*180,10*log10(energypatten2),theta/pi*180,10*log10(hfint/max(hfint)*max(energypatten2)));
-    title('energy pattern');
+    energypatten2nol=energypatten2/sum(energypatten2)*length(energypatten2);
+    figure(991);hold on
+%     plot(theta/pi*180,10*log10(energypatten2nol),theta/pi*180,10*log10(hfint/max(hfint)*max(energypatten2nol)));
+    plot(theta/pi*180,10*log10(energypatten2nol));
+    ylim([-30,30]);title('energy pattern');
+    hold off
     
 %     sigt1outenv=abs(hilbert(sigt1out.').');
 %     figure;imagesc(taxis,theta/pi*180,sigt1outenv);
@@ -167,13 +172,23 @@ if fignum>4
     xcorrpattern=abs(hilbert(xcorr0.').');
 %     figure;imagesc(tcor,theta/pi*180,abs(xcorrpattern));
     
-    figure;
-    [tcorm,angm]=meshgrid(tcor,theta/pi*180);
-%     surf(tcorm,angm,abs(xcorrpattern),'EdgeColor','none');
-%     mesh(tcorm,angm,abs(xcorrpattern))
-    waterfall(tcorm,angm,abs(xcorrpattern)) % number of angle<=37
-    %waterfall(angm.',tcorm.',abs(xcorrpattern.'))  %---another direction~
-    title('xcorr pattern');
+    xcorrpatternmax=max(abs(xcorrpattern).');
+    xcorrpatternmaxnol=xcorrpatternmax/sum(xcorrpatternmax)*length(xcorrpatternmax);
+    figure(992);hold on
+%     plot(theta/pi*180,20*log10(xcorrpatternmaxnol),...
+%         theta/pi*180,10*log10(hfint/max(hfint)*max(xcorrpatternmaxnol)^2));%hfint is energy, 10log; but xcorrpatternmaxnol is volt,^2
+    plot(theta/pi*180,20*log10(xcorrpatternmaxnol));
+    ylim([-30,30]);title('xcorr pattern');
+    hold off
+    
+    
+%     figure;
+%     [tcorm,angm]=meshgrid(tcor,theta/pi*180);
+% %     surf(tcorm,angm,abs(xcorrpattern),'EdgeColor','none');
+% %     mesh(tcorm,angm,abs(xcorrpattern))
+%     waterfall(tcorm,angm,abs(xcorrpattern)) % number of angle<=37
+%     %waterfall(angm.',tcorm.',abs(xcorrpattern.'))  %---another direction~
+%     title('xcorr pattern');
 end
 
 end
