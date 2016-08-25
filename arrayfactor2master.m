@@ -28,7 +28,7 @@ xposition=xposition0-(min(xposition0)+max(xposition0))/2;
 % figure;stem(xposition,max(spacings)*ones(1,length(xposition)));hold on
 % plot(linspace(-max(xposition),max(xposition),length(spacings)),spacings)
 
-aimdegree0=-40;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+aimdegree0=45;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 NN=8001;
 freqaxis=linspace(-40e9,40e9,NN);
@@ -40,15 +40,51 @@ dgraxis=linspace(-90,90,721);
 
 % sigt1=cos( 2*pi*10e9*t + pi*10e9/(ts*NN)*t.^2);
 % sigt1=cos( 2*pi*10e9*t).* exp(-(t/0.1e-9).^2);
-sigt1=sigeneratorfor2d( t,  'lfm', 2e9, 10e9 );
+sigt1=[zeros(1,2000) sigeneratorfor2d( t(2001:6001),  'lfm', 4e9, 10e9 ) zeros(1,2000)];
 % figure;plot(t,sigt1);
 % title('sig waveform');
 
-dgrsection=-40;
+dgrsection=45;
 freqsection=10e9;
 
 % arrayfactorangFORgeneral( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1, 1 );
-arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1,0, 5 );
+arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1,0, 4 );
 
+% hiap=figure(991);
+% lhiap=findall(hiap,'type','line');
+% yalliap=get(lhiap,'ydata');
+% xiap=get(lhiap,'xdata');
+% 
+% outputmiap=xiap{1};
+% for ii2=1:length(yalliap)
+%     outputmiap=[outputmiap; yalliap{ii2}];
+% end
+% 
+% % save('outputmiapHAMMING.mat','outputmiap');
+% save('outputmiap.mat','outputmiap');
+% 
+% hcmp=figure(992);
+% lhcmp=findall(hcmp,'type','line');
+% yallcmp=get(lhcmp,'ydata');
+% xcmp=get(lhcmp,'xdata');
+% 
+% outputmcmp=xcmp{1};
+% for ii2=1:length(yallcmp)
+%     outputmcmp=[outputmcmp; yallcmp{ii2}];
+% end
+% 
+% % save('outputmcmpHAMMING.mat','outputmcmp');
+% save('outputmcmp.mat','outputmcmp');
 
+hglenv=figure(993);
+lhglenv=findall(hglenv,'type','line');
+yallhglenv=get(lhglenv,'ydata');
+xhglenv=get(lhglenv,'xdata');
+
+outputmglenv=xhglenv{1};
+for ii2=1:length(yallhglenv)
+    outputmglenv=[outputmglenv; yallhglenv{ii2}];
+end
+
+save('outputmglenv.mat','outputmglenv');
 

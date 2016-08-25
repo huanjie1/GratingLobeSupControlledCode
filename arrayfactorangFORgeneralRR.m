@@ -115,17 +115,17 @@ if fignum>1
     thetainstr=dgrsection/180*pi;%ÇÐÆ¬Î»ÖÃ
     [dthmin,thindex]=min(abs(theta-thetainstr));
     htheta=allresponse(thindex,:);
-    figure(99999);plot(w((NN-1)/2:NN)/2/pi,abs(htheta((NN-1)/2:NN)));hold on
-    xlim([0,40e9]);
-    title(['theta section @ \theta = ' num2str(dgrsection) 'degree']);
+%     figure(99999);plot(w((NN-1)/2:NN)/2/pi,abs(htheta((NN-1)/2:NN)));hold on
+%     xlim([0,40e9]);
+%     title(['theta section @ \theta = ' num2str(dgrsection) 'degree']);
 end
 
 if fignum>2
     winstr=freqsection*2*pi;%ÇÐÆ¬Î»ÖÃ
     [dfmin,findex]=min(abs(w-winstr));
     pfreq=allresponse(:,findex);
-    figure(999999);plot(theta/pi*180,abs(pfreq));hold on
-    title(['freq section @ freq = ' num2str(freqsection/1e9) 'GHz']);
+%     figure(999999);plot(theta/pi*180,abs(pfreq));hold on
+%     title(['freq section @ freq = ' num2str(freqsection/1e9) 'GHz']);
     hfint=abs(allresponse(:,findex)).^2;
 end
 
@@ -133,24 +133,34 @@ if fignum>3
     sigf1=fft_plot( sigt1, ts, NN, 2 );
     sigf1out=(ones(length(dgraxis),1)*sigf1).*allresponse;
     % sigf1out(isnan(sigf1out))=0;
-    figure;imagesc(w/2/pi,theta/pi*180,abs(sigf1out));
-    title('sig spetrum');
+%     figure;imagesc(w/2/pi,theta/pi*180,abs(sigf1out));
+%     title('sig spetrum');
     % sigt1out=ifftshift(ifft(sigf1out,NN,2),2);%%%% wrong!!!!!
     %%%% pay attention to the order of ifftshift and ifft
     sigt1out=ifft(ifftshift(sigf1out,2),NN,2);
     
     
     energypatten2=sum(abs(sigt1out).^2,2);
-    energypatten2nol=energypatten2/sum(energypatten2)*length(energypatten2);
+%     energypatten2nol=energypatten2/sum(energypatten2)*length(energypatten2);
+    energypatten2nol=energypatten2/max(energypatten2);
     figure(991);hold on
 %     plot(theta/pi*180,10*log10(energypatten2nol),theta/pi*180,10*log10(hfint/max(hfint)*max(energypatten2nol)));
     plot(theta/pi*180,10*log10(energypatten2nol));
-    ylim([-30,30]);title('energy pattern');
+    ylim([-40,5]);title('energy pattern');
     hold off
     
-%     sigt1outenv=abs(hilbert(sigt1out.').');
-%     figure;imagesc(taxis,theta/pi*180,sigt1outenv);
-%     title('sig envlope');
+    
+    sigt1outenv=abs(hilbert(sigt1out.').');
+    figure;imagesc(taxis,theta/pi*180,sigt1outenv);
+    title('sig envlope');
+    
+    
+    thetainstr2=-17/180*pi;%ÇÐÆ¬Î»ÖÃ
+    [dthmin,thindex2]=min(abs(theta-thetainstr2));
+    glenv=sigt1outenv(thindex2,:)/16;
+    figure(993);hold on
+    plot(taxis,glenv);title('envelop at gl');
+    hold off
 end
 
 if fignum>4    
@@ -173,12 +183,13 @@ if fignum>4
 %     figure;imagesc(tcor,theta/pi*180,abs(xcorrpattern));
     
     xcorrpatternmax=max(abs(xcorrpattern).');
-    xcorrpatternmaxnol=xcorrpatternmax/sum(xcorrpatternmax)*length(xcorrpatternmax);
+%     xcorrpatternmaxnol=xcorrpatternmax/sum(xcorrpatternmax)*length(xcorrpatternmax);
+    xcorrpatternmaxnol=xcorrpatternmax/max(xcorrpatternmax);
     figure(992);hold on
 %     plot(theta/pi*180,20*log10(xcorrpatternmaxnol),...
 %         theta/pi*180,10*log10(hfint/max(hfint)*max(xcorrpatternmaxnol)^2));%hfint is energy, 10log; but xcorrpatternmaxnol is volt,^2
     plot(theta/pi*180,20*log10(xcorrpatternmaxnol));
-    ylim([-30,30]);title('xcorr pattern');
+    ylim([-40,5]);title('xcorr pattern');
     hold off
     
     
