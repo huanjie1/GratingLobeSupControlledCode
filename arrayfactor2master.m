@@ -48,7 +48,7 @@ dgrsection=45;
 freqsection=10e9;
 
 % arrayfactorangFORgeneral( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1, 1 );
-arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1,0, 4 );
+arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1,6, 1 );
 
 % hiap=figure(991);
 % lhiap=findall(hiap,'type','line');
@@ -76,15 +76,15 @@ arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsect
 % % save('outputmcmpHAMMING.mat','outputmcmp');
 % save('outputmcmp.mat','outputmcmp');
 
-hglenv=figure(993);
-lhglenv=findall(hglenv,'type','line');
-yallhglenv=get(lhglenv,'ydata');
-xhglenv=get(lhglenv,'xdata');
-
-outputmglenv=xhglenv{1};
-for ii2=1:length(yallhglenv)
-    outputmglenv=[outputmglenv; yallhglenv{ii2}];
-end
-
-save('outputmglenv.mat','outputmglenv');
+% hglenv=figure(993);
+% lhglenv=findall(hglenv,'type','line');
+% yallhglenv=get(lhglenv,'ydata');
+% xhglenv=get(lhglenv,'xdata');
+% 
+% outputmglenv=xhglenv{1};
+% for ii2=1:length(yallhglenv)
+%     outputmglenv=[outputmglenv; yallhglenv{ii2}];
+% end
+% 
+% save('outputmglenv.mat','outputmglenv');
 

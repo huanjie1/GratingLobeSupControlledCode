@@ -93,6 +93,15 @@ if 5==strunum   %real phase shifter using limited TTD
    arrayresponse=exp(1i*(delayset).'*w);
 end
 
+if 6==strunum %multi-section phase shifters to approximate TTD
+    wr0=w((NN-1)/2+2:NN);
+    freqbase=1.1;
+    wrn=freqbase.^round(log(wr0)/log(freqbase));
+    wn=[-wrn(end:-1:1) 0 wrn];
+%     plot(w,w,w,wn);
+    arrayresponse=exp(1i*(-xposition*sin(aimtheta0)/c).'*wn);
+end
+
 % figure;imagesc(w/2/pi,xposition,angle(arrayresponse));xlabel('Frequency/GHz');ylabel('xposition');
 
 allresponse=ones(length(theta),NN);
