@@ -23,8 +23,24 @@ antennanum=length(xposition);
 % window1=hamming(antennanum)*ones(1,NN);
 window1=rectwin(antennanum)*ones(1,NN);
 
-if 0==strunum %ideal TTD
-    arrayresponse=exp(1i*(-xposition*sin(aimtheta0)/c).'*w);
+if 0==strunum % ideal TTD
+    dl0=-xposition*sin(aimtheta0)/c;
+    switchmode=2;
+    
+    if 0==switchmode % continue
+        dl=dl0;
+    else if 1==switchmode % uniform delay unit
+            delaybase=30e-12;   
+            dl=delaybase*round(dl0/delaybase);
+        else % delay unit with different steps for different element 
+            switchbitnum=2;
+            delaybase=(xposition-mean(xposition))*2/c/2^switchbitnum;
+            dl=delaybase.*round(dl0./delaybase);
+        end            
+    end
+    
+    arrayresponse=exp(1i*(dl).'*w);
+    
 end
 
 if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
@@ -84,7 +100,13 @@ end
 
 if 4==strunum   %ideal phase shifter
     wr=w((NN-1)/2+2:NN);
-    arrayresponser=exp(1i*(-xposition*sin(aimtheta0)/c).'*(2*pi*centerfreq*ones(1,length(wr))));
+    ps0=(-xposition*sin(aimtheta0)/c).'*(2*pi*centerfreq*ones(1,length(wr)));
+    
+    psbitnum=2;
+    psbase=2*pi/2^psbitnum;
+    ps=psbase*round(ps0/psbase);
+    
+    arrayresponser=exp(1i*ps);
     arrayresponse=[conj(arrayresponser(:,end:-1:1)) zeros(antennanum,1) arrayresponser];
 end
 
@@ -103,7 +125,7 @@ if 6==strunum %multi-section phase shifters to approximate TTD
 end
 
 if 7==strunum  %with subarray; inter-subarray: ideal TTD; inner-subarray: ideal PS
-    subarrayelenum=1;%%%%%%%%%%%%%%%%%%%%%%%
+    subarrayelenum=16;%%%%%%%%%%%%%%%%%%%%%%%
     
     xpositiondl=xposition;
     xpositionps=xposition;
