@@ -47,8 +47,8 @@ sigt1=[zeros(1,2000) sigeneratorfor2d( t(2001:6001),  'lfm', 4e9, 10e9 ) zeros(1
 dgrsection=45;
 freqsection=10e9;
 
-% arrayfactorangFORgeneral( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1, 1 );
-arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1,6, 1 );
+% arrayfactorangFORgeneral( xposition, freqaxis, dgraxis, t, aimdegree0, centerfreq, dgrsection, freqsection, sigt1, 1 );
+arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, centerfreq, dgrsection, freqsection, sigt1,7, 1 );
 
 % hiap=figure(991);
 % lhiap=findall(hiap,'type','line');

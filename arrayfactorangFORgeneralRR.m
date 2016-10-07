@@ -1,4 +1,4 @@
-function [ allresponse] = arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, taxis, aimdgr, dgrsection, freqsection, sigt1, strunum, fignum )
+function [ allresponse] = arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, taxis, aimdgr, centerfreq, dgrsection, freqsection, sigt1, strunum, fignum )
 % arrayfactorangFORgeneral.m
 % 频率/角度二维图，一维布阵，任意排布，利用实测OBFN响应计算
 % 一维线阵的坐标向量，频率轴，角度轴，时间轴，目标角度，角度截面位置，频率截面位置，时域信号波形，波束形成网络结构选择，作图参数
@@ -84,22 +84,56 @@ end
 
 if 4==strunum   %ideal phase shifter
     wr=w((NN-1)/2+2:NN);
-    arrayresponser=exp(1i*(-xposition*sin(aimtheta0)/c).'*(2*pi*freqsection*ones(1,length(wr))));
+    arrayresponser=exp(1i*(-xposition*sin(aimtheta0)/c).'*(2*pi*centerfreq*ones(1,length(wr))));
     arrayresponse=[conj(arrayresponser(:,end:-1:1)) zeros(antennanum,1) arrayresponser];
 end
 
 if 5==strunum   %real phase shifter using limited TTD
-   delayset=mod(-xposition*sin(aimtheta0)/c*2*pi*freqsection,2*pi) / (2*pi*freqsection);
+   delayset=mod(-xposition*sin(aimtheta0)/c*2*pi*centerfreq,2*pi) / (2*pi*centerfreq);
    arrayresponse=exp(1i*(delayset).'*w);
 end
 
 if 6==strunum %multi-section phase shifters to approximate TTD
     wr0=w((NN-1)/2+2:NN);
-    freqbase=1.1;
+    freqbase=1.1;%%%%%%%%%%%%%%%%%%%%%%%%%
     wrn=freqbase.^round(log(wr0)/log(freqbase));
     wn=[-wrn(end:-1:1) 0 wrn];
 %     plot(w,w,w,wn);
     arrayresponse=exp(1i*(-xposition*sin(aimtheta0)/c).'*wn);
+end
+
+if 7==strunum  %with subarray; inter-subarray: ideal TTD; inner-subarray: ideal PS
+    subarrayelenum=1;%%%%%%%%%%%%%%%%%%%%%%%
+    
+    xpositiondl=xposition;
+    xpositionps=xposition;
+    index7left=1;
+    index7leftn=index7left+subarrayelenum-1;
+    index7right=length(xposition);    
+    index7rightn=index7right-subarrayelenum+1;
+    
+    while( xposition(index7leftn)<0 && xposition(index7rightn)>0 )
+        xpositiondl(index7left:index7leftn)=mean(xposition(index7left:index7leftn));
+        xpositionps(index7left:index7leftn)=xposition(index7left:index7leftn)-xpositiondl(index7left:index7leftn);
+        xpositiondl(index7rightn:index7right)=mean(xposition(index7rightn:index7right));
+        xpositionps(index7rightn:index7right)=xposition(index7rightn:index7right)-xpositiondl(index7rightn:index7right);
+        index7left=index7left+subarrayelenum;
+        index7leftn=index7leftn+subarrayelenum;
+        index7right=index7right-subarrayelenum;        
+        index7rightn=index7rightn-subarrayelenum;
+    end
+    xpositiondl(index7left:index7right)=mean(xposition(index7left:index7right));
+    
+%     plot(1:antennanum,xposition,1:antennanum,xpositiondl,1:antennanum,xpositionps);xlim([1,16])
+    
+    arrayresponsedl=exp(1i*(-xpositiondl*sin(aimtheta0)/c).'*w);
+    
+    wr=w((NN-1)/2+2:NN);
+    arrayresponserps=exp(1i*(-xpositionps*sin(aimtheta0)/c).'*(2*pi*centerfreq*ones(1,length(wr))));
+    arrayresponseps=[conj(arrayresponserps(:,end:-1:1)) zeros(antennanum,1) arrayresponserps];
+    
+    arrayresponse=arrayresponsedl.*arrayresponseps;
+    
 end
 
 % figure;imagesc(w/2/pi,xposition,angle(arrayresponse));xlabel('Frequency/GHz');ylabel('xposition');
