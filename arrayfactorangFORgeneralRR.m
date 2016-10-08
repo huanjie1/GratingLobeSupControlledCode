@@ -1,8 +1,9 @@
 function [ allresponse] = arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, taxis, aimdgr, centerfreq, dgrsection, freqsection, sigt1, strunum, fignum )
-% arrayfactorangFORgeneral.m
+% arrayfactorangFORgeneralRR.m
 % 频率/角度二维图，一维布阵，任意排布，利用实测OBFN响应计算
 % 一维线阵的坐标向量，频率轴，角度轴，时间轴，目标角度，角度截面位置，频率截面位置，时域信号波形，波束形成网络结构选择，作图参数
 % 被arrayfactor2master.m调用
+% 调用光频响应函数optiresDISP.m, optiresRING.m
 
 c=299792458;
 
@@ -80,29 +81,50 @@ if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
         lc=2*pi*c/wc
     end
     
-    T= b1 +  b2*(wc-w0) + 1/2*b3*(wc-w0).^2;
-    D=   1/2*b2         + 1/2*b3*(wc-w0)  ;
-    G=                    1/6*b3          ;
     
+    
+%     % closed form based (begin)    
+%     modindex=0.1;
+%     AA=-1i*besselj(1,modindex);  % sideband #-1
+%     BB= 1 *besselj(0,modindex);  % sideband # 0
+%     CC= 1i*besselj(1,modindex);  % sideband #+1
+%     
+%     T= b1 +  b2*(wc-w0) + 1/2*b3*(wc-w0).^2;
+%     D=   1/2*b2         + 1/2*b3*(wc-w0)  ;
+%     G=                    1/6*b3          ;   
+% 
+%     wr=w((NN-1)/2+1:NN);
+%     beat1cenv=conj(AA)*BB* exp(1i* (-T*wr + D*wr.^2 - G*ones(antennanum,1)*wr.^3) )/(-1i);%complex envelop
+%     beat2cenv=conj(BB)*CC* exp(1i* (-T*wr - D*wr.^2 - G*ones(antennanum,1)*wr.^3) )/(-1i);%complex envelop    
+%     % closed form based (end)  #####
+    
+    
+    % general solution （begin）    
+    wr=w((NN-1)/2+1:NN);    
     modindex=0.1;
-    AA=-1i*besselj(1,modindex);
-    BB= 1 *besselj(0,modindex);
-    CC= 1i*besselj(1,modindex);
-
-    wr=w((NN-1)/2+1:NN);
-    beat1cenv=conj(AA)*BB* exp(1i* (-T*wr + D*wr.^2 - G*ones(antennanum,1)*wr.^3) )/(-1i);%complex envelop
-    beat2cenv=conj(BB)*CC* exp(1i* (-T*wr - D*wr.^2 - G*ones(antennanum,1)*wr.^3) )/(-1i);%complex envelop
+    coffn1=-1i*besselj(1,modindex)*ones(antennanum,length(wr));  % sideband #-1
+    coffc0= 1 *besselj(0,modindex)*ones(antennanum,length(wr));  % sideband # 0
+    coffp1= 1i*besselj(1,modindex)*ones(antennanum,length(wr));  % sideband #+1
+    
+    respn1=optiresDISP(b1,b2,b3,w0,wc,-wr); % sideband #-1
+    respc0=optiresDISP(b1,b2,b3,w0,wc,zeros(1,length(wr))); % sideband # 0
+    respp1=optiresDISP(b1,b2,b3,w0,wc,wr); % sideband #+1   
+    
+    beat1cenv=conj(coffn1.*respn1).*(coffc0.*respc0)/(-1i);%complex envelop
+    beat2cenv=conj(coffc0.*respc0).*(coffp1.*respp1)/(-1i);%complex envelop    
+    % general solution  (end)  #####
 
     %%%%%%%%%%%% DSB  SSB
     arrayresponser=1*beat1cenv+1*beat2cenv;
     arrayresponse=[conj(arrayresponser(:,end:-1:2)) arrayresponser];
+    
 end
 
 if 4==strunum   %ideal phase shifter
     wr=w((NN-1)/2+2:NN);
     ps0=(-xposition*sin(aimtheta0)/c).'*(2*pi*centerfreq*ones(1,length(wr)));
     
-    psbitnum=2;
+    psbitnum=14;
     psbase=2*pi/2^psbitnum;
     ps=psbase*round(ps0/psbase);
     
@@ -158,6 +180,10 @@ if 7==strunum  %with subarray; inter-subarray: ideal TTD; inner-subarray: ideal 
     
 end
 
+if 8==strunum % microring
+    
+end
+
 % figure;imagesc(w/2/pi,xposition,angle(arrayresponse));xlabel('Frequency/GHz');ylabel('xposition');
 
 allresponse=ones(length(theta),NN);
@@ -180,17 +206,17 @@ if fignum>1
     thetainstr=dgrsection/180*pi;%切片位置
     [dthmin,thindex]=min(abs(theta-thetainstr));
     htheta=allresponse(thindex,:);
-%     figure(99999);plot(w((NN-1)/2:NN)/2/pi,abs(htheta((NN-1)/2:NN)));hold on
-%     xlim([0,40e9]);
-%     title(['theta section @ \theta = ' num2str(dgrsection) 'degree']);
+    figure(99999);plot(w((NN-1)/2:NN)/2/pi,abs(htheta((NN-1)/2:NN)));hold on
+    xlim([0,40e9]);
+    title(['theta section @ \theta = ' num2str(dgrsection) 'degree']);
 end
 
 if fignum>2
     winstr=freqsection*2*pi;%切片位置
     [dfmin,findex]=min(abs(w-winstr));
     pfreq=allresponse(:,findex);
-%     figure(999999);plot(theta/pi*180,abs(pfreq));hold on
-%     title(['freq section @ freq = ' num2str(freqsection/1e9) 'GHz']);
+    figure(999999);plot(theta/pi*180,abs(pfreq));hold on
+    title(['freq section @ freq = ' num2str(freqsection/1e9) 'GHz']);
     hfint=abs(allresponse(:,findex)).^2;
 end
 
