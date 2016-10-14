@@ -31,10 +31,10 @@ if 0==strunum % ideal TTD
     if 0==switchmode % continue
         dl=dl0;
     else if 1==switchmode % uniform delay unit
-            delaybase=30e-12;   
+            delaybase=10e-12;   
             dl=delaybase*round(dl0/delaybase);
         else % delay unit with different steps for different element 
-            switchbitnum=2;
+            switchbitnum=4;
             delaybase=(xposition-mean(xposition))*2/c/2^switchbitnum;
             dl=delaybase.*round(dl0./delaybase);
         end            
@@ -124,7 +124,7 @@ if 4==strunum   %ideal phase shifter
     wr=w((NN-1)/2+2:NN);
     ps0=(-xposition*sin(aimtheta0)/c).'*(2*pi*centerfreq*ones(1,length(wr)));
     
-    psbitnum=14;
+    psbitnum=1;
     psbase=2*pi/2^psbitnum;
     ps=psbase*round(ps0/psbase);
     
@@ -208,6 +208,24 @@ if fignum>0
     ylabel('\theta');
     colorbar;
     % set(gcf,'outerposition',get(0,'screensize'));
+    
+%     sdx1=[w((NN-1)/2) w((NN-1)/2) w(NN) w(NN)]/2/pi;
+%     sdy1=[theta(1) theta(end) theta(end) theta(1)]/pi*180;
+%     sdxc=[[0.8 0.8]*centerfreq,  [w(NN) w(NN)]/2/pi];
+%     sdyc=[0.8 1.2 1.2 0.8]*aimtheta0/pi*180;
+%     sdadx=[[1.2 1.2]*centerfreq,  [w(NN) w(NN)]/2/pi];
+%     sdady=sdyc;
+%     [xsd, ysd] = polybool('subtraction', sdx1, sdy1, sdxc, sdyc); % 边界必须连续    
+%     aa1=patch(xsd,ysd,'black','EdgeColor','none','facealpha',0.3);
+%     aa2=patch(sdadx,sdady,'black','EdgeColor','none','facealpha',0.3);
+    
+    sdx1=[[w((NN-1)/2) w((NN-1)/2)]/2/pi,  [0.8 0.8]*centerfreq];
+    sdy1=[theta(1) theta(end) theta(end) theta(1)]/pi*180;
+    sdx2=[[1.2 1.2]*centerfreq,  [w(NN) w(NN)]/2/pi];
+    sdy2=sdy1;
+    aa1=patch(sdx1,sdy1,'black','EdgeColor','none','facealpha',0.3);
+    aa2=patch(sdx2,sdy2,'black','EdgeColor','none','facealpha',0.3);
+    
 end
 
 if fignum>1
