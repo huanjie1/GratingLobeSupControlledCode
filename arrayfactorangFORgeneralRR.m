@@ -138,16 +138,24 @@ if 5==strunum   %real phase shifter using limited TTD
 end
 
 if 6==strunum %multi-section phase shifters to approximate TTD
-    wr0=w((NN-1)/2+2:NN);
-    freqbase=1.1;%%%%%%%%%%%%%%%%%%%%%%%%%
-    wrn=freqbase.^round(log(wr0)/log(freqbase));
-    wn=[-wrn(end:-1:1) 0 wrn];
+%     wr0=w((NN-1)/2+2:NN);
+%     freqbase=1.6;%%%%%%%%%%%%%%%%%%%%%%%%%
+%     wrn=freqbase.^round(log(wr0)/log(freqbase));
+%     wn=[-wrn(end:-1:1) 0 wrn];
+    wr0=w((NN-1)/2+2:NN)/(2*pi*centerfreq); % ensure the ideal phase @ centerfreq     
+    relativebw=0.7;
+    freqoctave=(2+relativebw)/(2-relativebw);
+    suppnum=round(log(10)/log(freqoctave)); %section num for freq below centerfreq    
+    freqlogint=round(log(wr0)/log(freqoctave));
+    freqlogint(freqlogint<-suppnum)=-suppnum;
+    wrn=freqoctave.^(freqlogint);
+    wn=[-wrn(end:-1:1) 0 wrn]*(2*pi*centerfreq);
 %     plot(w,w,w,wn);
     arrayresponse=exp(1i*(-xposition*sin(aimtheta0)/c).'*wn);
 end
 
 if 7==strunum  %with subarray; inter-subarray: ideal TTD; inner-subarray: ideal PS
-    subarrayelenum=16;%%%%%%%%%%%%%%%%%%%%%%%
+    subarrayelenum=1;%%%%%%%%%%%%%%%%%%%%%%%
     
     xpositiondl=xposition;
     xpositionps=xposition;
