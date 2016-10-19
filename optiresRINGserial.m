@@ -1,43 +1,80 @@
-function [ ringserpresp ] = optiresRINGserial( fcaim, bwaim, ringnum, fsweep, ringmode )
+function [ ringserpresp, delayerrormean, lossmean, rvec ] = optiresRINGserial( paramat, fsweep, aimdelay0)
+% optiresRINGserial.m
+% 级联微环的响应计算
+% 参数矩阵（格式见下），目标谐振频率，关心的频率（行向量），目标延时（数值或向量）
+%     参数矩阵格式（详细解释见optiresRING.m）：
+%     [
+%         环1的 trs1, faim, r0, modenum, tuo, neff, trs2, yita ;
+%         环1的 trs1, faim, r0, modenum, tuo, neff, trs2, yita ;
+%         环1的 trs1, faim, r0, modenum, tuo, neff, trs2, yita ;
+%         环1的 trs1, faim, r0, modenum, tuo, neff, trs2, yita ;
+%             。。。
+%     ]
+% 级联微环的响应，延迟的均方误差，均方损耗，实际的（等效）环半径
+% 被.m调用
 
+% % codes for test (begin)
+% clear
+% 
+% aimdelay0=200e-12;
+% fsweep=193.4e12+[-40:0.2:40]*1e9; 
+% 
+% tobeoptimum=[ ...
+%     0.6, 193.4e12-25e9,...
+%     0.5, 193.4e12,...
+%     0.6, 193.4e12+25e9    ];    
+% paramatmain=reshape(tobeoptimum,2,length(tobeoptimum)/2).';    
+%     
+% r0=100e-6;
+% ringmodenum=1;
+% tuo=0.96;
+% neff=1.9375;
+% trs2=0.8;
+% yita=0.99;
+% paramat0=ones(length(tobeoptimum)/2,1)*[r0, ringmodenum, tuo, neff, trs2, yita ];
+%  
+% paramat=[paramatmain,paramat0];
+% 
+% [ ringserpresp, delayerrormean, lossmean, rvec ] = optiresRINGserial( paramat, fsweep, aimdelay0);
+% figure(123);plot(fsweep,abs(ringserpresp))
+% % codes for test (end)
 
-figureenable=0;
+figureon=1;%###########
 
-if nargin<1
-    fcaim=193.4e12;
-    bwaim=25e9;
-    fsweep=193.4e12+(-400:0.01:400)*1e9;
-    ringnum=3;
-    ringmode=1;
-    figureenable=1;
+% figureon=0;
+
+if 1==length(aimdelay0)
+    aimdelay=ones(1,length(fsweep))*aimdelay0;
+else if length(aimdelay0)==length(fsweep)
+      aimdelay=aimdelay0;
+    else
+        error('bad aimdelay0');
+    end
 end
 
-[ring1,r1]=optiresRING( ringmode, 0.9, 0.6, 100e-6, 1.9735, fcaim-bwaim/2, fsweep, 0, 0 );
-[ring2,r2]=optiresRING( ringmode, 0.9, 0.5, 100e-6, 1.9735, fcaim, fsweep, 0, 0 );
-[ring3,r3]=optiresRING( ringmode, 0.9, 0.6, 100e-6, 1.9735, fcaim+bwaim/2, fsweep, 0, 0 );
-r1
-r2
-r3
-ringserpresp=ring1.*ring2.*ring3;
+ringpresp=zeros(size(paramat,1),length(fsweep));
+rvec=zeros(1,size(paramat,1));
 
-if 1==figureenable
-    figure(33333);hold on
-    subplot(3,1,1);plot((fsweep),abs(ringserpresp));title('amp');hold on
-    subplot(3,1,2);plot((fsweep),phase(ringserpresp));title('phase');hold on
-    subplot(3,1,3);plot((fsweep),[0 -diff(phase(ringserpresp))/(fsweep(2)-fsweep(1))/2/pi]);title('delay');hold on
-    figure(33333);hold on
-    subplot(3,1,1);plot((fsweep),abs(ring1));title('amp');hold on
-    subplot(3,1,2);plot((fsweep),phase(ring1));title('phase');hold on
-    subplot(3,1,3);plot((fsweep),[0 -diff(phase(ring1))/(fsweep(2)-fsweep(1))/2/pi]);title('delay');hold on
-    figure(33333);hold on
-    subplot(3,1,1);plot((fsweep),abs(ring2));title('amp');hold on
-    subplot(3,1,2);plot((fsweep),phase(ring2));title('phase');hold on
-    subplot(3,1,3);plot((fsweep),[0 -diff(phase(ring2))/(fsweep(2)-fsweep(1))/2/pi]);title('delay');hold on
-    figure(33333);hold on
-    subplot(3,1,1);plot((fsweep),abs(ring3));title('amp');hold on
-    subplot(3,1,2);plot((fsweep),phase(ring3));title('phase');hold on
-    subplot(3,1,3);plot((fsweep),[0 -diff(phase(ring3))/(fsweep(2)-fsweep(1))/2/pi]);title('delay');hold on
+for index1=1:size(paramat,1)
+    [ ringpresp(index1,:), rvec(index1) ] = optiresRING( ...
+        paramat(index1,1), paramat(index1,2), paramat(index1,3), paramat(index1,4), ...
+        paramat(index1,5), paramat(index1,6), fsweep, paramat(index1,7), paramat(index1,8) );
+    if 1==figureon
+        figure(123);plot(fsweep,abs(ringpresp(index1,:)));hold on
+    end
 end
+
+ringserpresp=prod(ringpresp,1);
+delayres0=-diff(phase(ringserpresp))/(fsweep(2)-fsweep(1))/2/pi;
+delayres=[delayres0 delayres0(end)];
+
+if 1==figureon
+    figure(234);plot(fsweep,delayres);
+end
+
+delayerrormean=sqrt(sum((aimdelay-delayres).^2)/length(fsweep));
+
+lossmean=-20*log10(sqrt(sum(abs(ringserpresp).^2)/length(fsweep)));
 
 end
 

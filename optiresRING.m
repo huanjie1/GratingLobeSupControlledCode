@@ -1,10 +1,10 @@
-function [ ringpresp, r ] = optiresRING( modenum, tuo, trs1, r0, neff, faim, fsweep, trs2, yita )
+function [ ringpresp, r ] = optiresRING( trs1, faim, r0, modenum, tuo, neff, fsweep, trs2, yita )
 % optiresRING.m
 % 理想微环响应的计算（基于参量模型）
-% 模式选择（1：全通；2：上下载,3：反射式），损耗，输入端传输系数，半径(m)，有效折射率，目标谐振光频率（小于0则为无此约束），
-%            扫频频段（row vector），输出端传输系数（用于模式2），反射损耗（用于模式3）
+% 模式选择（1：全通；2：上下载,3：反射式），损耗，输入端传输系数，（等效）半径(m)，有效折射率，
+%            目标谐振光频率（小于0则为无此约束），扫频频段（row vector），输出端传输系数（用于模式2），反射损耗（用于模式3）
 % 环在fsweep下的响应，由所需中心谐振点所确定的实际半径
-% 被arrayfactorangFORgeneralRR.m调用
+% 被arrayfactorangFORgeneralRR.m，optiresRINGserial.m调用
 
 c=299792458;
 figureenable=0;
