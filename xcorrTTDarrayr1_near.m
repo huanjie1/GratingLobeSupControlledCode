@@ -43,8 +43,8 @@ else
 end
 
 % 
-% [sigaddt,sigaddf]=timedelayftadd( delaytime, sig0f, freq);
-[sigaddt,sigaddf]=timedelayftadd_ele( delaytime, sig0f, freq,seeangle);
+[sigaddt,sigaddf]=timedelayftadd( delaytime, sig0f, freq);
+% [sigaddt,sigaddf]=timedelayftadd_ele( delaytime, sig0f, freq,seeangle);
 
 % hfspace=sin( (arraynum/2)*d/c*(sin(seeangle)-sin(aimangle+1e-14)).*2*pi*freq )...
 %     ./sin( 0.5*d/c*(sin(seeangle)-sin(aimangle+1e-14)).*2*pi*freq);%+1e-9 to avoid 0/0
