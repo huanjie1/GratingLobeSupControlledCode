@@ -1,9 +1,9 @@
 function [ allresponse] = arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, taxis, aimdgr, centerfreq, dgrsection, freqsection, sigt1, strunum, fignum )
 % arrayfactorangFORgeneralRR.m
-% 频率/角度二维图，一维布阵，任意排布，利用实测OBFN响应计算
+% 频率/角度二维图，一维布阵，任意排布，利用各种网络响应计算
 % 一维线阵的坐标向量，频率轴，角度轴，时间轴，目标角度，角度截面位置，频率截面位置，时域信号波形，波束形成网络结构选择，作图参数
 % 被arrayfactor2master.m调用
-% 调用光频响应函数optiresDISP.m, optiresRING.m
+% 调用光频响应函数optiresDISP.m, optiresRINGsys.m
 
 c=299792458;
 
@@ -26,11 +26,11 @@ window1=rectwin(antennanum)*ones(1,NN);
 
 if 0==strunum % ideal TTD
     dl0=-xposition*sin(aimtheta0)/c;
-    switchmode=2;
+    switchmode=0;
     
     if 0==switchmode % continue
         dl=dl0;
-    else if 1==switchmode % uniform delay unit
+    else if 1==switchmode % uniform delay unit %与二叉树式兼容？？？
             delaybase=10e-12;   
             dl=delaybase*round(dl0/delaybase);
         else % delay unit with different steps for different element 
@@ -83,7 +83,7 @@ if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
     
     
     
-%     % closed form based (begin)    
+%     % closed form based (begin)    Elapsed time is 0.010651 seconds.
 %     modindex=0.1;
 %     AA=-1i*besselj(1,modindex);  % sideband #-1
 %     BB= 1 *besselj(0,modindex);  % sideband # 0
@@ -99,16 +99,23 @@ if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
 %     % closed form based (end)  #####
     
     
-    % general solution （begin）    
-    wr=w((NN-1)/2+1:NN);    
+    % general solution （begin）    Elapsed time is 0.014591 seconds.
+%     wr=w((NN-1)/2+1:NN);    
     modindex=0.1;
-    coffn1=-1i*besselj(1,modindex)*ones(antennanum,length(wr));  % sideband #-1
-    coffc0= 1 *besselj(0,modindex)*ones(antennanum,length(wr));  % sideband # 0
-    coffp1= 1i*besselj(1,modindex)*ones(antennanum,length(wr));  % sideband #+1
+    coffn1=-1i*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #-1
+    coffc0= 1 *besselj(0,modindex)*ones(antennanum,(NN+1)/2);  % sideband # 0
+    coffp1= 1i*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #+1
     
-    respn1=optiresDISP(b1,b2,b3,w0,wc,-wr); % sideband #-1
-    respc0=optiresDISP(b1,b2,b3,w0,wc,zeros(1,length(wr))); % sideband # 0
-    respp1=optiresDISP(b1,b2,b3,w0,wc,wr); % sideband #+1   
+%     Elapsed time is 0.011766 seconds.
+    respnall=optiresDISP(b1,b2,b3,w0,wc,w);
+    respn1=respnall(:,(NN+1)/2:-1:1); % sideband #-1
+    respc0=respnall(:,(NN+1)/2)*ones(1,(NN+1)/2); % sideband # 0
+    respp1=respnall(:,(NN+1)/2:NN); % sideband #+1   
+
+% %     Elapsed time is 0.014664 seconds.
+%     respn1=optiresDISP(b1,b2,b3,w0,wc,-wr); % sideband #-1
+%     respc0=optiresDISP(b1,b2,b3,w0,wc,zeros(1,length(wr))); % sideband # 0
+%     respp1=optiresDISP(b1,b2,b3,w0,wc,wr); % sideband #+1
     
     beat1cenv=conj(coffn1.*respn1).*(coffc0.*respc0)/(-1i);%complex envelop
     beat2cenv=conj(coffc0.*respc0).*(coffp1.*respp1)/(-1i);%complex envelop    
@@ -190,6 +197,31 @@ end
 
 if 8==strunum % microring
     
+    lc=1550.5e-9;
+    wc=2*pi*c/lc;
+    
+    serialnum=[4 3 2 1];
+    aimbw=10e9;
+    
+    % general solution （begin）    
+%     wr=w((NN-1)/2+1:NN);    
+    modindex=0.1;
+    coffn1=-1i*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #-1
+    coffc0= 1 *besselj(0,modindex)*ones(antennanum,(NN+1)/2);  % sideband # 0
+    coffp1= 1i*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #+1
+    
+    respnall=optiresRINGsys(pi/3,aimtheta0,xposition,serialnum,aimbw,centerfreq,wc/2/pi,w/2/pi);
+    respn1=respnall(:,(NN+1)/2:-1:1); % sideband #-1
+    respc0=respnall(:,(NN+1)/2)*ones(1,(NN+1)/2); % sideband # 0
+    respp1=respnall(:,(NN+1)/2:NN); % sideband #+1     
+    
+    beat1cenv=conj(coffn1.*respn1).*(coffc0.*respc0)/(-1i);%complex envelop
+    beat2cenv=conj(coffc0.*respc0).*(coffp1.*respp1)/(-1i);%complex envelop    
+    % general solution  (end)  #####
+
+    %%%%%%%%%%%% DSB  SSB
+    arrayresponser=1*beat1cenv+1*beat2cenv;
+    arrayresponse=[conj(arrayresponser(:,end:-1:2)) arrayresponser];
 end
 
 % figure;imagesc(w/2/pi,xposition,angle(arrayresponse));xlabel('Frequency/GHz');ylabel('xposition');
