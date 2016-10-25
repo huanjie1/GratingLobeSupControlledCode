@@ -1,8 +1,8 @@
-function [ ringpresp, r ] = optiresRING( trs1, faim, r0, modenum, tuo, neff, fsweep, trs2, yita )
+function [ ringpresp, r ] = optiresRING( trs1, faim, trs2, r0, modenum, tuo, neff, fsweep, yita )
 % optiresRING.m
 % 理想微环响应的计算（基于参量模型）
-% 模式选择（1：全通；2：上下载,3：反射式），损耗，输入端传输系数，（等效）半径(m)，有效折射率，
-%            目标谐振光频率（小于0则为无此约束），扫频频段（row vector），输出端传输系数（用于模式2），反射损耗（用于模式3）
+% 模式选择（1：全通；2：上下载,3：反射式），损耗，输入端传输系数，输出端传输系数（用于模式2），（等效）半径(m)，
+%            有效折射率，目标谐振光频率（小于0则为无此约束），扫频频段（row vector），反射损耗（用于模式3）
 % 环在fsweep下的响应，由所需中心谐振点所确定的实际半径
 % 被arrayfactorangFORgeneralRR.m，optiresRINGserial.m调用
 
@@ -10,16 +10,12 @@ c=299792458;
 figureenable=0;
 
 if nargin<1
-    modenum=1;
+    modenum=3;
     figureenable=1;
 end
 
 switch modenum
     case 1  %全通
-        if nargin<9
-            trs2=0;
-            yita=0;
-        end
         if nargin<1
             trs1=0.8;
             tuo=0.96;
@@ -43,9 +39,6 @@ switch modenum
         
         
     case 2  % 上下载
-        if nargin<10
-            yita=0;
-        end
         if nargin<1
             trs1=0.9;
             trs2=0.8;
@@ -61,7 +54,7 @@ switch modenum
             r= 1/(faim / round( faim / (1/(2*pi*r0/(c/neff))) ) )*(c/neff)/2/pi; % ensure resonate @ faim
         end
         ka1=sqrt(1-trs1^2);
-        ka2=sqrt(1-trs1^2);
+        ka2=sqrt(1-trs2^2);
         delay=2*pi*r/(c/neff);
         p=exp(-0.5i*2*pi*(fsweep)*delay); %half phase-shift
 
@@ -87,7 +80,7 @@ switch modenum
             r= 1/(faim / round( faim / (1/(2*pi*r0/(c/neff))) ) )*(c/neff)/2/pi; % ensure resonate @ faim
         end
         ka1=sqrt(1-trs1^2);
-        ka2=sqrt(1-trs1^2);
+        ka2=sqrt(1-trs2^2);
         delay=2*pi*r/(c/neff);
         p=exp(-0.5i*2*pi*(fsweep)*delay); %half phase-shift
         
