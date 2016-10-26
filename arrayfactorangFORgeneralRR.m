@@ -200,8 +200,8 @@ if 8==strunum % microring
     lc=1550.5e-9;
     wc=2*pi*c/lc;
     
-    serialnum=[4 3 2 1];
-    aimbw=10e9;
+    serialnum=[8 4 2 1];
+    aimbw=1e9;
     
     % general solution £¨begin£©    
 %     wr=w((NN-1)/2+1:NN);    
@@ -220,7 +220,7 @@ if 8==strunum % microring
     % general solution  (end)  #####
 
     %%%%%%%%%%%% DSB  SSB
-    arrayresponser=1*beat1cenv+1*beat2cenv;
+    arrayresponser=0*beat1cenv+1*beat2cenv;
     arrayresponse=[conj(arrayresponser(:,end:-1:2)) arrayresponser];
 end
 

@@ -14,9 +14,9 @@ function [ delayerrormean, ringserpresp, lossmean, rvec, paramatok ] = optiresRI
 % ±».mµ÷ÓÃ
 
 
-figureon=1;%###########
+% figureon=1;%###########
 
-% figureon=0;
+figureon=0;
 
 if 1==length(aimdelay0)
     aimdelay=ones(1,length(fsweep))*aimdelay0;
@@ -75,7 +75,7 @@ if 1==optimflag
         bd=[2*bd(1)-bd(2) bd fcen];
     end
     
-    lb=[ones(rownum,1)*0.1, (bd(1:end-2).'-fcen)/1e10];%
+    lb=[ones(rownum,1)*0.03, (bd(1:end-2).'-fcen)/1e10];%
     ub=[ones(rownum,1)*tuodft, (bd(3:end).'-fcen)/1e10];%
     
     if size(paramat,2)>2
@@ -155,7 +155,7 @@ end
 % -------------------------------------------------------------------------------------------------------------
     function delayerrormeanNE = RINGserialnested(paramatNE0)
         
-        figureonNE=1;
+        figureonNE=0;
         
         if 1==mod(ringnum,2)
             paramatNE1=[paramatNE0; paramatNE0(end-1:-1:1,:)];

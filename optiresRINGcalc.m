@@ -5,7 +5,7 @@ function [ ringserpresp ] = optiresRINGcalc( ringnum, aimdelay, aimbw, ocenf, fs
 % 被optiresRINGsys.m调用
 % 调用级联微环计算函数optiresRINGserial.m
 
-% a=ringnum+aimdelay+aimbw+ocf+fsweep;
+% a=ringnum+aimdelay+aimbw+ocenf+fsweep;
 % 
 % ringserpresp=exp(-1i*2*pi*aimdelay*fsweep);
 
@@ -34,3 +34,4 @@ paramat0=[0.5*ones(ceil(ringnum/2),1) ocenf+fc0(2:ceil(ringnum/2)+1).'];
 
 [ delayerrormean, ringserpresp, lossmean, rvec, paramatok ] = optiresRINGserial( paramatok, ringnum, fsweep, aimdelay,0);
 end
+
