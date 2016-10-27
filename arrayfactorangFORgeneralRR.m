@@ -201,7 +201,7 @@ if 8==strunum % microring
     wc=2*pi*c/lc;
     
     serialnum=[8 4 2 1];
-    aimbw=1e9;
+    aimbw=10e9;
     
     % general solution £¨begin£©    
 %     wr=w((NN-1)/2+1:NN);    

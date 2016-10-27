@@ -16,7 +16,7 @@ function [ delayerrormean, ringserpresp, lossmean, rvec, paramatok ] = optiresRI
 
 % figureon=1;%###########
 
-figureon=0;
+figureon=1;
 
 if 1==length(aimdelay0)
     aimdelay=ones(1,length(fsweep))*aimdelay0;
@@ -93,7 +93,9 @@ if 1==optimflag
     er=[];
     foc=[];
     trs11=[];
-    [paramatok0,delayerrormean,exitflag]=fmincon(@RINGserialnested,paramat,[],[],[],[],lb,ub);
+    opts = optimoptions(@fmincon,'Display','none');
+    [paramatok0,delayerrormean,exitflag]=fmincon(@RINGserialnested,paramat,[],[],[],[],lb,ub,[],opts);
+    delayerrormean=delayerrormean*1e-12;
     
     if 1==mod(ringnum,2)
         paramatok=[paramatok0; paramatok0(end-1:-1:1,:)];
@@ -115,7 +117,6 @@ if 1==optimflag
     
     if 1==figureon
         figure;plot(er)
-        figure;
     end
     
 else
@@ -138,7 +139,8 @@ else
     delayres=[delayres0 delayres0(end)];
 
     if 1==figureon
-        figure(234);plot(fsweep,delayres);
+        figure(234);plot(fsweep,delayres);hold on
+        figure(123);plot(fsweep,abs(ringserpresp));hold on
     end
 
     delayerrormean=sqrt(sum((aimdelay-delayres).^2)/length(fsweep));

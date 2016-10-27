@@ -30,8 +30,11 @@ fc0=linspace(-aimbw/2,aimbw/2,ringnum+2);
 
 paramat0=[0.5*ones(ceil(ringnum/2),1) ocenf+fc0(2:ceil(ringnum/2)+1).'];
 
-[ delayerrormean, ringserpresp, lossmean, rvec, paramatok ] = optiresRINGserial( paramat0, ringnum, mainfbd, aimdelay,1,ocenf);
+[ delayerrormean, ~, ~, ~, paramatok ] = optiresRINGserial( paramat0, ringnum, mainfbd, aimdelay,1,ocenf);
 
-[ delayerrormean, ringserpresp, lossmean, rvec, paramatok ] = optiresRINGserial( paramatok, ringnum, fsweep, aimdelay,0);
+[ ~, ringserpresp, ~, ~, ~ ] = optiresRINGserial( paramatok, ringnum, fsweep, aimdelay,0);
+
+note1=['number of rings: ' num2str(ringnum) ';   aim delay: ' num2str(aimdelay) '; delay error: ' num2str(delayerrormean)]
+
 end
 
