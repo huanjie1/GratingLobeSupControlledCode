@@ -16,7 +16,7 @@ function [ delayerrormean, ringserpresp, lossmean, rvec, paramatok ] = optiresRI
 
 % figureon=1;%###########
 
-figureon=1;
+figureon=0;
 
 if 1==length(aimdelay0)
     aimdelay=ones(1,length(fsweep))*aimdelay0;
@@ -51,6 +51,7 @@ else
     rownum=ringnum;
 end
 
+paramatADD=[];
 if size(paramat,2)<3
     paramatADD=ones(ringnum,1)*trs2dft;
 end
@@ -94,7 +95,7 @@ if 1==optimflag
     foc=[];
     trs11=[];
     opts = optimoptions(@fmincon,'Display','none');
-    [paramatok0,delayerrormean,exitflag]=fmincon(@RINGserialnested,paramat,[],[],[],[],lb,ub,[],opts);
+    [paramatok0,delayerrormean,exitflag]=fmincon(@RINGserialnested,paramat,[],[],[],[],lb,ub,[]);%,opts
     delayerrormean=delayerrormean*1e-12;
     
     if 1==mod(ringnum,2)
@@ -139,7 +140,7 @@ else
     delayres=[delayres0 delayres0(end)];
 
     if 1==figureon
-        figure(234);plot(fsweep,delayres);hold on
+        figure(234);plot(fsweep,delayres,fsweep,aimdelay);hold on
         figure(123);plot(fsweep,abs(ringserpresp));hold on
     end
 
@@ -174,6 +175,7 @@ end
         paramatNE=[paramatNE1 paramatADD];
         
         paramatNE(:,2)=paramatNE(:,2)*1e10+fcen; % move & scaling
+        paramatNE(:,3)=paramatNE(:,1);
 
         ringprespNE=zeros(size(paramatNE,1),length(fsweep));
         rvecNE=zeros(1,size(paramat,1));

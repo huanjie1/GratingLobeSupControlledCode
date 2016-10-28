@@ -10,7 +10,7 @@ c=299792458;
 figureenable=0;
 
 if nargin<1
-    modenum=3;
+    modenum=2;
     figureenable=1;
 end
 
@@ -41,9 +41,9 @@ switch modenum
     case 2  % 上下载
         if nargin<1
             trs1=0.9;
-            trs2=0.8;
+            trs2=0.9;
             tuo=0.96;
-            r0=120e-6; % 若r以一定的最大公约数变化，则该最大公约数恰能与neff配合使在某一频点处的p不变
+            r0=100e-6; % 若r以一定的最大公约数变化，则该最大公约数恰能与neff配合使在某一频点处的p不变
             neff=1.9735; 
             faim=c/1550e-9;                        
             fsweep=193e12+(-400:0.01:400)*1e9;

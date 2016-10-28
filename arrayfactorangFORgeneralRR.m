@@ -210,9 +210,10 @@ if 8==strunum % microring
     coffc0= 1 *besselj(0,modindex)*ones(antennanum,(NN+1)/2);  % sideband # 0
     coffp1= 1i*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #+1
     
-    respnall=optiresRINGsys(pi/3,aimtheta0,xposition,serialnum,aimbw,centerfreq,wc/2/pi,w/2/pi);
+    respnall=optiresRINGsys(pi/3,aimtheta0,xposition,serialnum,aimbw,0,wc/2/pi,w/2/pi);
     respn1=respnall(:,(NN+1)/2:-1:1); % sideband #-1
     respc0=respnall(:,(NN+1)/2)*ones(1,(NN+1)/2); % sideband # 0
+%     respc0=ones(size(respn1)); % sideband # 0
     respp1=respnall(:,(NN+1)/2:NN); % sideband #+1     
     
     beat1cenv=conj(coffn1.*respn1).*(coffc0.*respc0)/(-1i);%complex envelop
@@ -224,11 +225,22 @@ if 8==strunum % microring
     arrayresponse=[conj(arrayresponser(:,end:-1:2)) arrayresponser];
 end
 
-% figure;imagesc(w/2/pi,xposition,angle(arrayresponse));xlabel('Frequency/GHz');ylabel('xposition');
+% figure;imagesc(w((NN-1)/2+1:NN)/2/pi,xposition,angle(arrayresponse(:,(NN-1)/2+1:NN)));xlabel('Frequency/GHz');ylabel('xposition');
+% figure;
+% for inda=1:antennanum
+%     plot(w((NN-1)/2+1:NN)/2/pi,phase(arrayresponse(inda,(NN-1)/2+1:NN)));hold on
+% end
 
 allresponse=ones(length(theta),NN);
 for thind=1:length(theta)
     spaceresponse=exp(1i*(xposition*sin(theta(thind))/c).'*w);
+%     if abs(theta(thind)-aimtheta0)/pi*180<0.2
+%         figure;
+%         allr01=arrayresponse.*window1.*spaceresponse;
+%         for inda2=2:antennanum
+%             plot(w((NN-1)/2+1:NN)/2/pi,phase(allr01(inda2,(NN-1)/2+1:NN)./allr01(inda2-1,(NN-1)/2+1:NN)));hold on
+%         end
+%     end
     allresponse(thind,:)=sum(arrayresponse.*window1.*spaceresponse);
 end
 
@@ -251,12 +263,12 @@ if fignum>0
 %     aa1=patch(xsd,ysd,'black','EdgeColor','none','facealpha',0.3);
 %     aa2=patch(sdadx,sdady,'black','EdgeColor','none','facealpha',0.3);
     
-    sdx1=[[w((NN-1)/2) w((NN-1)/2)]/2/pi,  [0.8 0.8]*centerfreq];
-    sdy1=[theta(1) theta(end) theta(end) theta(1)]/pi*180;
-    sdx2=[[1.2 1.2]*centerfreq,  [w(NN) w(NN)]/2/pi];
-    sdy2=sdy1;
-    aa1=patch(sdx1,sdy1,'black','EdgeColor','none','facealpha',0.3);
-    aa2=patch(sdx2,sdy2,'black','EdgeColor','none','facealpha',0.3);
+%     sdx1=[[w((NN-1)/2) w((NN-1)/2)]/2/pi,  [0.8 0.8]*centerfreq];
+%     sdy1=[theta(1) theta(end) theta(end) theta(1)]/pi*180;
+%     sdx2=[[1.2 1.2]*centerfreq,  [w(NN) w(NN)]/2/pi];
+%     sdy2=sdy1;
+%     aa1=patch(sdx1,sdy1,'black','EdgeColor','none','facealpha',0.3);
+%     aa2=patch(sdx2,sdy2,'black','EdgeColor','none','facealpha',0.3);
     
 end
 
