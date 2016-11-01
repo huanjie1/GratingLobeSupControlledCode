@@ -16,7 +16,7 @@ function [ delayerrormean, ringserpresp, lossmean, rvec, paramatok ] = optiresRI
 
 % figureon=1;%###########
 
-figureon=0;
+figureon=1;
 
 if 1==length(aimdelay0)
     aimdelay=ones(1,length(fsweep))*aimdelay0;
@@ -29,7 +29,7 @@ end
 
 r0dft=100e-6;
 trs2dft=0.8;
-ringmodenumdft=1;
+ringmodenumdft=2;
 tuodft=0.96;
 neffdft=1.9375;
 yitadft=0.99;
@@ -73,7 +73,7 @@ if 1==optimflag
             bd=[min(fsweep) bd fcen];
         end
     else
-        bd=[2*bd(1)-bd(2) bd fcen];
+        bd=[2*bd(1)-bd(2) bd 2*bd(end)-bd(end-1)];
     end
     
     lb=[ones(rownum,1)*0.03, (bd(1:end-2).'-fcen)/1e10];%
@@ -94,8 +94,13 @@ if 1==optimflag
     er=[];
     foc=[];
     trs11=[];
-    opts = optimoptions(@fmincon,'Display','none');
-    [paramatok0,delayerrormean,exitflag]=fmincon(@RINGserialnested,paramat,[],[],[],[],lb,ub,[]);%,opts
+    trs12=[];
+    opts = optimoptions(@fmincon);
+    opts.Display='final';
+%     opts.Algorithm='sqp';
+    
+    
+    [paramatok0,delayerrormean,exitflag]=fmincon(@RINGserialnested,paramat,[],[],[],[],lb,ub,[],opts);%
     delayerrormean=delayerrormean*1e-12;
     
     if 1==mod(ringnum,2)
@@ -118,6 +123,9 @@ if 1==optimflag
     
     if 1==figureon
         figure;plot(er)
+        figure;plot(foc.');
+        figure;plot(trs11.');
+        figure;plot(trs12.');
     end
     
 else
@@ -125,6 +133,8 @@ else
 
     ringpresp=zeros(size(paramat,1),length(fsweep));
     rvec=zeros(1,size(paramat,1));
+    
+%     paramat(:,3)=paramat(:,1);
 
     for index1=1:size(paramat,1)
         [ ringpresp(index1,:), rvec(index1) ] = optiresRING( ...
@@ -175,7 +185,7 @@ end
         paramatNE=[paramatNE1 paramatADD];
         
         paramatNE(:,2)=paramatNE(:,2)*1e10+fcen; % move & scaling
-        paramatNE(:,3)=paramatNE(:,1);
+%         paramatNE(:,3)=paramatNE(:,1);
 
         ringprespNE=zeros(size(paramatNE,1),length(fsweep));
         rvecNE=zeros(1,size(paramat,1));
@@ -202,6 +212,7 @@ end
         er=[er delayerrormeanNE];
         foc=[foc paramatNE(:,2)-fcen];
         trs11=[trs11 paramatNE(:,1)];
+        trs12=[trs12 paramatNE(:,3)];
     end
 % -------------------------------------------------------------------------------------------------------------
 
