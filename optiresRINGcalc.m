@@ -10,7 +10,7 @@ function [ ringserpresp ] = optiresRINGcalc( ringnum, aimdelay, aimbw, ocenf, fs
 % ringserpresp=exp(-1i*2*pi*aimdelay*fsweep);
 
 if nargin<1
-    ringnum=5;
+    ringnum=6;
     aimdelay=50e-12;
     aimbw=10e9;
     ocenf=193.4e12+10e9;

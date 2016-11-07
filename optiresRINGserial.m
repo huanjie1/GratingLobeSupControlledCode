@@ -29,7 +29,7 @@ end
 
 r0dft=100e-6;
 trs2dft=0.8;
-ringmodenumdft=2;
+ringmodenumdft=1;
 tuodft=0.96;
 neffdft=1.9375;
 yitadft=0.99;
@@ -121,12 +121,12 @@ if 1==optimflag
     lossmean=0;
     rvec=0;
     
-    if 1==figureon
-        figure;plot(er)
-        figure;plot(foc.');
-        figure;plot(trs11.');
-        figure;plot(trs12.');
-    end
+%     if 1==figureon
+%         figure;plot(er)
+%         figure;plot(foc.');
+%         figure;plot(trs11.');
+%         figure;plot(trs12.');
+%     end
     
 else
     paramat=[paramat paramatADD];
@@ -188,9 +188,9 @@ end
 %         paramatNE(:,3)=paramatNE(:,1);
 
         ringprespNE=zeros(size(paramatNE,1),length(fsweep));
-        rvecNE=zeros(1,size(paramat,1));
+        rvecNE=zeros(1,size(paramatNE,1));
         
-        for index1NE=1:size(paramatNE,1)
+        for index1NE=1:size(paramatNE,1)  
             [ ringprespNE(index1NE,:), rvecNE(index1NE) ] = optiresRING( ...
                 paramatNE(index1NE,1), paramatNE(index1NE,2), paramatNE(index1NE,3), paramatNE(index1NE,4), ...
                 paramatNE(index1NE,5), paramatNE(index1NE,6), paramatNE(index1NE,7), fsweep, paramatNE(index1NE,8) );
