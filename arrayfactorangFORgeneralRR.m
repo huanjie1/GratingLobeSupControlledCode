@@ -40,8 +40,28 @@ if 0==strunum % ideal TTD
         end            
     end
     
-    arrayresponse=exp(1i*(dl).'*w);
+%     arrayresponse=exp(1i*(dl).'*w);
+
+
+    arrayresponse0=exp(1i*(dl).'*w);
     
+    ctrlnum=61;
+    errlength=(NN-1)/2;
+    ctrposi=round(linspace(1,errlength,ctrlnum));
+    maxerrdeg=15;% degree
+    
+    errphaser=zeros(antennanum,errlength);
+    for ind11=1:antennanum
+        errphaser(ind11,:)=(interp1(ctrposi,rand(1,ctrlnum),1:errlength,'PCHIP')-0.5)*maxerrdeg*2;
+    end
+%     imagesc(1:errlength,1:antennanum,errphaser);        
+%     plot(errphaser.');
+    errresponser=exp(1i*errphaser/180*pi);
+    errresponse=[conj(errresponser(:,end:-1:1)) zeros(antennanum,1) errresponser];
+%     imagesc(w,1:antennanum,angle(errresponse));
+    arrayresponse=arrayresponse0.*errresponse;
+%     imagesc(w,1:antennanum,angle(arrayresponse0));
+%     figure;imagesc(w,1:antennanum,angle(arrayresponse));
 end
 
 if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
