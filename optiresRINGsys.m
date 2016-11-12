@@ -49,7 +49,7 @@ elemat=mod(floor((((1:antanum)-1).'*ones(1,levelnum))./(ones(antanum,1)*binbase)
 % % Elapsed time is 0.003-4 seconds.
 ringarrayresponse0=exp( elemat * log(levelringmat) );
 
-ringarrayresponse0=ringarrayresponse0./abs(ringarrayresponse0);
+% ringarrayresponse0=ringarrayresponse0./abs(ringarrayresponse0);
 
 
 % % Elapsed time is 0.003-4 seconds.
@@ -64,15 +64,15 @@ ringarrayresponse0=ringarrayresponse0./abs(ringarrayresponse0);
 
 ringarrayresponse=ringarrayresponse0.*exp(-1i*2*pi*delayoffset*(ocf+rfaxis));
 
-% figure;imagesc(rfaxis,1:levelnum,abs(levelringmat));title('mag.');
-% leveldelay=[zeros(levelnum,1) -diff(angle(levelringmat),1,2)/((rfaxis(2)-rfaxis(1)))/2/pi];
-% leveldelay(abs(leveldelay)>1e-8)=0;
-% figure;imagesc(rfaxis,1:levelnum,leveldelay);title('delay');
-% 
-% figure;imagesc(rfaxis,1:antanum,abs(ringarrayresponse0));title('mag.');
-% ringarrayresponse0delay=[zeros(antanum,1) -diff(angle(ringarrayresponse0),1,2)/((rfaxis(2)-rfaxis(1)))/2/pi];
-% ringarrayresponse0delay(abs(ringarrayresponse0delay)>1e-8)=0;
-% figure;imagesc(rfaxis,1:antanum,ringarrayresponse0delay);title('delay');
+figure;imagesc(rfaxis,1:levelnum,abs(levelringmat));title('mag.');
+leveldelay=[zeros(levelnum,1) -diff(angle(levelringmat),1,2)/((rfaxis(2)-rfaxis(1)))/2/pi];
+leveldelay(abs(leveldelay)>1e-8)=0;
+figure;imagesc(rfaxis,1:levelnum,leveldelay);title('delay');
+
+figure;imagesc(rfaxis,1:antanum,abs(ringarrayresponse0));title('mag.');
+ringarrayresponse0delay=[zeros(antanum,1) -diff(angle(ringarrayresponse0),1,2)/((rfaxis(2)-rfaxis(1)))/2/pi];
+ringarrayresponse0delay(abs(ringarrayresponse0delay)>1e-8)=0;
+figure;imagesc(rfaxis,1:antanum,ringarrayresponse0delay);title('delay');
 
 
 end

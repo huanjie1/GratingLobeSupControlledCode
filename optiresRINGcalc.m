@@ -10,9 +10,9 @@ function [ ringserpresp ] = optiresRINGcalc( ringnum, aimdelay, aimbw, ocenf, fs
 % ringserpresp=exp(-1i*2*pi*aimdelay*fsweep);
 
 if nargin<1
-    ringnum=3;
-    aimdelay=100e-12;
-    aimbw=2e9;
+    ringnum=6;
+    aimdelay=50e-12;
+    aimbw=10e9;
     ocenf=193.4e12+10e9;
     fsweep=193.4e12+(-40e9:0.1e9:40e9);
 end
@@ -26,7 +26,7 @@ fc0=linspace(-aimbw/2,aimbw/2,ringnum+2);
 % %         0.9 ocenf+0.67e9;...
 % %         0.89 ocenf+2e9];
 
-paramat0=[0.5*ones(ceil(ringnum/2),1) ocenf+fc0(2:ceil(ringnum/2)+1).'];
+paramat0=[0.5*ones(ceil(ringnum/2),1) ocenf+fc0(2:ceil(ringnum/2)+1).' 0.5*ones(ceil(ringnum/2),1)];
 
 [ delayerrormean, ~, ~, ~, paramatok ] = optiresRINGserial( paramat0, ringnum, mainfbd, aimdelay,1,ocenf);
 
