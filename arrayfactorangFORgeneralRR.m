@@ -264,6 +264,19 @@ for thind=1:length(theta)
     allresponse(thind,:)=sum(arrayresponse.*window1.*spaceresponse);
 end
 
+% % alternative method to calculate allresponse,the more loop runs, the more time consumed
+% window2=rectwin(antennanum)*ones(1,length(theta));
+% allresponse=ones(length(theta),NN);
+% for wind=1:length(w)
+%     spaceresponse=exp(1i*(xposition.'*w(wind)*sin(theta)/c));
+% 
+%     allresponse(:,wind)=sum(...
+%         arrayresponse(:,wind)*ones(1,length(theta))...
+%         .*window2...
+%         .*spaceresponse).';
+% end
+
+
 if fignum>0
     h=abs(allresponse);
     figure;imagesc(w((NN-1)/2:NN)/2/pi,theta/pi*180,h(:,(NN-1)/2:NN));xlabel('Frequency/Hz');
