@@ -48,7 +48,7 @@ if 0==strunum % ideal TTD
     ctrlnum=61;
     errlength=(NN-1)/2;
     ctrposi=round(linspace(1,errlength,ctrlnum));
-    maxerrdeg=15;% degree
+    maxerrdeg=0;% degree
     
     errphaser=zeros(antennanum,errlength);
     for ind11=1:antennanum
@@ -250,6 +250,14 @@ end
 % for inda=1:antennanum
 %     plot(w((NN-1)/2+1:NN)/2/pi,phase(arrayresponse(inda,(NN-1)/2+1:NN)));hold on
 % end
+
+%band pass
+ampmask=ones(antennanum,1)*exp(-((abs(w/2/pi)-10e9)/5.5e9).^18);
+% plot(w/2/pi,ampmask)
+arrayresponse=arrayresponse.*ampmask;
+
+st2Dresponse=fftshift(fft(conj(arrayresponse),length(theta),1),1); 
+figure;imagesc(w((NN-1)/2:NN)/2/pi,linspace(-pi,pi,length(theta)),abs(st2Dresponse(:,(NN-1)/2:NN)));xlabel('Frequency/Hz');
 
 allresponse=ones(length(theta),NN);
 for thind=1:length(theta)
