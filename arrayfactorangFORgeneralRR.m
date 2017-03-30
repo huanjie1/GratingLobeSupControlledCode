@@ -23,6 +23,7 @@ antennanum=length(xposition);
 
 % window1=hamming(antennanum)*ones(1,NN);
 window1=rectwin(antennanum)*ones(1,NN);
+% window1=[1 1 1 1 0 1 1 1].'*ones(1,NN);
 
 if 0==strunum % ideal TTD
     dl0=-xposition*sin(aimtheta0)/c;
@@ -91,9 +92,10 @@ if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
     end
 
     if 3==strunum   % multi-DISP, master:DISP
-        dstart=-100;
-        dend=100;
-        d0=((xposition-xposition(1))/(xposition(end)-xposition(1))*(dend-dstart)+dstart).';%ps/nm
+%         dstart=000;
+%         dend=90;
+%         d0=((xposition-xposition(1))/(xposition(end)-xposition(1))*(dend-dstart)+dstart).';%ps/nm
+        d0=(0:length(xposition)-1).'*100;
         b2=-lambda0^2/2/pi/c*d0/1e12*1e9;%1/s/s
         b1=0;
         b3=0;
@@ -122,9 +124,14 @@ if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
     % general solution £¨begin£©    Elapsed time is 0.014591 seconds.
 %     wr=w((NN-1)/2+1:NN);    
     modindex=0.1;
-    coffn1=-1i*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #-1
-    coffc0= 1 *besselj(0,modindex)*ones(antennanum,(NN+1)/2);  % sideband # 0
-    coffp1= 1i*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #+1
+    alphapolm=105   /180*pi;
+%     coffn1=-1j*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #-1
+%     coffc0= 1 *besselj(0,modindex)*ones(antennanum,(NN+1)/2);  % sideband # 0
+%     coffp1= 1j*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #+1
+
+    coffn1=( -cos(alphapolm)*1j + sin(alphapolm) )*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #-1
+    coffc0=(  cos(alphapolm)*1j + sin(alphapolm) )*besselj(0,modindex)*ones(antennanum,(NN+1)/2);  % sideband # 0
+    coffp1=(  cos(alphapolm)*1j - sin(alphapolm) )*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #+1
     
 %     Elapsed time is 0.011766 seconds.
     respnall=optiresDISP(b1,b2,b3,w0,wc,w);
@@ -151,7 +158,7 @@ if 4==strunum   %ideal phase shifter
     wr=w((NN-1)/2+2:NN);
     ps0=(-xposition*sin(aimtheta0)/c).'*(2*pi*centerfreq*ones(1,length(wr)));
     
-    psbitnum=1;
+    psbitnum=100;
     psbase=2*pi/2^psbitnum;
     ps=psbase*round(ps0/psbase);
     
@@ -241,7 +248,7 @@ if 8==strunum % microring
     % general solution  (end)  #####
 
     %%%%%%%%%%%% DSB  SSB
-    arrayresponser=0*beat1cenv+1*beat2cenv;
+    arrayresponser=1*beat1cenv+1*beat2cenv;
     arrayresponse=[conj(arrayresponser(:,end:-1:2)) arrayresponser];
 end
 
@@ -254,10 +261,10 @@ end
 %band pass
 ampmask=ones(antennanum,1)*exp(-((abs(w/2/pi)-10e9)/5.5e9).^18);
 % plot(w/2/pi,ampmask)
-arrayresponse=arrayresponse.*ampmask;
+% arrayresponse=arrayresponse.*ampmask;
 
-st2Dresponse=fftshift(fft(conj(arrayresponse),length(theta),1),1); 
-figure;imagesc(w((NN-1)/2:NN)/2/pi,linspace(-pi,pi,length(theta)),abs(st2Dresponse(:,(NN-1)/2:NN)));xlabel('Frequency/Hz');
+% st2Dresponse=fftshift(fft(conj(arrayresponse),length(theta),1),1); 
+% figure;imagesc(w((NN-1)/2:NN)/2/pi/1e9,linspace(-pi,pi,length(theta)),abs(st2Dresponse(:,(NN-1)/2:NN)));xlabel('Frequency/GHz');
 
 allresponse=ones(length(theta),NN);
 for thind=1:length(theta)
@@ -287,7 +294,7 @@ end
 
 if fignum>0
     h=abs(allresponse);
-    figure;imagesc(w((NN-1)/2:NN)/2/pi,theta/pi*180,h(:,(NN-1)/2:NN));xlabel('Frequency/Hz');
+    figure;imagesc(w((NN-1)/2:NN)/2/pi/1E9,theta/pi*180,h(:,(NN-1)/2:NN));xlabel('Frequency/GHz');
 %     figure;imagesc(w/2/pi,theta/pi*180,h);xlabel('Frequency/GHz');
     % imagesc(w/2/pi/c*d,theta/pi*180,h);xlabel('d/{\lambda}');
     ylabel('\theta');
@@ -390,7 +397,8 @@ if fignum>4
     figure(992);hold on
 %     plot(theta/pi*180,20*log10(xcorrpatternmaxnol),...
 %         theta/pi*180,10*log10(hfint/max(hfint)*max(xcorrpatternmaxnol)^2));%hfint is energy, 10log; but xcorrpatternmaxnol is volt,^2
-    plot(theta/pi*180,20*log10(xcorrpatternmaxnol));
+%     plot(theta/pi*180,20*log10(xcorrpatternmaxnol));
+    plot(theta/pi*180,(xcorrpatternmaxnol));
     ylim([-40,5]);title('xcorr pattern');
     hold off
     

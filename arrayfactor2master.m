@@ -2,7 +2,7 @@
 % 绘制二维阵列因子
 % 调用arrayfactorangFORgeneral.m, arrayfactorangFORgeneralRR.m
 clear
-N=16;
+N=8;
 c=299792458;
 diffindex=0:(N-2);
 centerfreq=10e9;
@@ -10,7 +10,7 @@ centerlambda=c/centerfreq;
 spacing0=1*centerlambda;
 
 devimode='squ';
-% devimode='squ';
+% devimode='squ';*7/2
 
 if strcmp(devimode,'squ')
     spacingdia=1*0.0000*diffindex.^2;%deviation from even spacing
@@ -19,6 +19,8 @@ else
     spacings=randn(1,N-1)*spacing0*0.2+spacing0;
 end
 
+% spacings(1)=(spacings(1)+spacings(2))/(1+pi/2);
+% spacings(2)=(spacings(1)+spacings(2))/(1+pi/2)*pi/2;
 
 if sum(spacings<0)>0
     error('wrong spacingdia');
@@ -28,7 +30,7 @@ xposition=xposition0-(min(xposition0)+max(xposition0))/2;
 % figure;stem(xposition,max(spacings)*ones(1,length(xposition)));hold on
 % plot(linspace(-max(xposition),max(xposition),length(spacings)),spacings)
 
-aimdegree0=60;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+aimdegree0=15;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 NN=8001;
 freqaxis=linspace(-40e9,40e9,NN);
@@ -44,11 +46,11 @@ sigt1=[zeros(1,2000) sigeneratorfor2d( t(2001:6001),  'lfm', 4e9, 10e9 ) zeros(1
 % figure;plot(t,sigt1);
 % title('sig waveform');
 
-dgrsection=45;
-freqsection=10e9;
+dgrsection=0;
+freqsection=8e9;
 
 % arrayfactorangFORgeneral( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1, 1 );
-arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, centerfreq, dgrsection, freqsection, sigt1, 0, 1 );
+arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, centerfreq, dgrsection, freqsection, sigt1, 4, 3 );
 
 % hiap=figure(991);
 % lhiap=findall(hiap,'type','line');
@@ -88,3 +90,12 @@ arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, centerf
 % 
 % save('outputmglenv.mat','outputmglenv');
 
+% hglenv=figure(999999);
+% lhglenv=findall(hglenv,'type','line');
+% yallhglenv=get(lhglenv,'ydata');
+% xhglenv=get(lhglenv,'xdata');
+% plot(xhglenv{1},yallhglenv{1}.*yallhglenv{2}.*yallhglenv{3}.*yallhglenv{4})
+
+% for ii=1:6
+%     plot(xhglenv{1},yallhglenv{ii}./max(yallhglenv{ii}),':');hold on
+% end
