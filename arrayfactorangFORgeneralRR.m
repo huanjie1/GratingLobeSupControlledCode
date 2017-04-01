@@ -1,4 +1,4 @@
-function [ allresponse] = arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, taxis, aimdgr, centerfreq, dgrsection, freqsection, sigt1, strunum, fignum )
+function [ xcorrpatternmaxnol, allresponse] = arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, taxis, aimdgr, centerfreq, dgrsection, freqsection, sigt1, strunum, fignum )
 % arrayfactorangFORgeneralRR.m
 % 频率/角度二维图，一维布阵，任意排布，利用各种网络响应计算
 % 一维线阵的坐标向量，频率轴，角度轴，时间轴，目标角度，角度截面位置，频率截面位置，时域信号波形，波束形成网络结构选择，作图参数
@@ -6,6 +6,8 @@ function [ allresponse] = arrayfactorangFORgeneralRR( xposition, freqaxis, dgrax
 % 调用光频响应函数optiresDISP.m, optiresRINGsys.m
 
 c=299792458;
+
+xcorrpatternmaxnol=0;
 
 spacings=diff(xposition);
 if sum(spacings<0)>0
@@ -372,13 +374,21 @@ if fignum>3
     hold off
 end
 
-if fignum>4    
+if fignum>0    
 %     %full xcorr
 %     xcorr0=ones(length(theta),NN*2-1);
 %     tcor=linspace(-taxis(end)+taxis(1),taxis(end)-taxis(1),NN*2-1);
 %     for thind=1:length(theta)      
 %         xcorr0(thind,:)=xcorr(sigt1out(thind,:),sigt1);
 %     end
+    
+    
+    
+    if fignum<=3
+        sigf1=fft_plot( sigt1, ts, NN, 2 );
+        sigf1out=(ones(length(dgraxis),1)*sigf1).*allresponse;
+        sigt1out=ifft(ifftshift(sigf1out,2),NN,2);
+    end
     
     %partial xcorr
     tlmax=3.5e-9;

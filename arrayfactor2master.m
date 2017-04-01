@@ -2,10 +2,10 @@
 % 绘制二维阵列因子
 % 调用arrayfactorangFORgeneral.m, arrayfactorangFORgeneralRR.m
 clear
-N=32;
+N=8;
 c=299792458;
 diffindex=0:(N-2);
-centerfreq=35e9;
+centerfreq=10e9;
 centerlambda=c/centerfreq;
 spacing0=1*centerlambda;
 
@@ -42,7 +42,7 @@ dgraxis=linspace(-90,90,721);
 
 % sigt1=cos( 2*pi*10e9*t + pi*10e9/(ts*NN)*t.^2);
 % sigt1=cos( 2*pi*10e9*t).* exp(-(t/0.1e-9).^2);
-sigt1=[zeros(1,2000) sigeneratorfor2d( t(2001:6001),  'phco', 4e9, 10e9 ) zeros(1,2000)];
+sigt1=[zeros(1,2000) sigeneratorfor2d( t(2001:6001),  'lfm', 0e9, 10e9 ) zeros(1,2000)];
 % figure;plot(t,sigt1);
 % title('sig waveform');
 
@@ -50,7 +50,9 @@ dgrsection=0;
 freqsection=35.1e9;
 
 % arrayfactorangFORgeneral( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1, 1 );
-arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, centerfreq, dgrsection, freqsection, sigt1, 4, 3 );
+cmpideal=arrayfactorangFORgeneralIDEAL( xposition, freqaxis, dgraxis, t, aimdegree0, centerfreq, dgrsection, freqsection, sigt1, 0, 1 );
+cmpue=arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, centerfreq, dgrsection, freqsection, sigt1, 3, 1 );
+fom1=cmpFoMcalc( dgraxis, aimdegree0, cmpideal, cmpue, 2 )
 
 % hiap=figure(991);
 % lhiap=findall(hiap,'type','line');
