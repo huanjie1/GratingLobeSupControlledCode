@@ -27,7 +27,7 @@ window1=rectwin(antennanum)*ones(1,NN);
 
 if 0==strunum % ideal TTD
     dl0=-xposition*sin(aimtheta0)/c;
-    switchmode=0;
+    switchmode=1;
     
     if 0==switchmode % continue
         dl=dl0;
@@ -124,14 +124,14 @@ if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
     % general solution £¨begin£©    Elapsed time is 0.014591 seconds.
 %     wr=w((NN-1)/2+1:NN);    
     modindex=0.1;
-    alphapolm=105   /180*pi;
-%     coffn1=-1j*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #-1
-%     coffc0= 1 *besselj(0,modindex)*ones(antennanum,(NN+1)/2);  % sideband # 0
-%     coffp1= 1j*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #+1
-
-    coffn1=( -cos(alphapolm)*1j + sin(alphapolm) )*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #-1
-    coffc0=(  cos(alphapolm)*1j + sin(alphapolm) )*besselj(0,modindex)*ones(antennanum,(NN+1)/2);  % sideband # 0
-    coffp1=(  cos(alphapolm)*1j - sin(alphapolm) )*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #+1
+    alphapolm=117   /180*pi;
+    coffn1=-1 *besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #-1
+    coffc0= 1 *besselj(0,modindex)*ones(antennanum,(NN+1)/2);  % sideband # 0
+    coffp1=-1 *besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #+1
+    
+%     coffn1=( -cos(alphapolm) -1j*sin(alphapolm) )*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #-1
+%     coffc0=(  cos(alphapolm) -1j*sin(alphapolm) )*besselj(0,modindex)*ones(antennanum,(NN+1)/2);  % sideband # 0
+%     coffp1=(  cos(alphapolm) +1j*sin(alphapolm) )*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #+1
     
 %     Elapsed time is 0.011766 seconds.
     respnall=optiresDISP(b1,b2,b3,w0,wc,w);
@@ -144,8 +144,8 @@ if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
 %     respc0=optiresDISP(b1,b2,b3,w0,wc,zeros(1,length(wr))); % sideband # 0
 %     respp1=optiresDISP(b1,b2,b3,w0,wc,wr); % sideband #+1
     
-    beat1cenv=conj(coffn1.*respn1).*(coffc0.*respc0)/(-1i);%complex envelop
-    beat2cenv=conj(coffc0.*respc0).*(coffp1.*respp1)/(-1i);%complex envelop    
+    beat1cenv=conj(coffn1.*respn1).*(coffc0.*respc0);%complex envelop
+    beat2cenv=conj(coffc0.*respc0).*(coffp1.*respp1);%complex envelop  
     % general solution  (end)  #####
 
     %%%%%%%%%%%% DSB  SSB
@@ -233,9 +233,9 @@ if 8==strunum % microring
     % general solution £¨begin£©    
 %     wr=w((NN-1)/2+1:NN);    
     modindex=0.1;
-    coffn1=-1i*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #-1
+    coffn1= 1 *besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #-1
     coffc0= 1 *besselj(0,modindex)*ones(antennanum,(NN+1)/2);  % sideband # 0
-    coffp1= 1i*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #+1
+    coffp1= 1 *besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #+1
     
     respnall=optiresRINGsys(pi/3,aimtheta0,xposition,serialnum,aimbw,centerfreq,wc/2/pi,w/2/pi);
     respn1=respnall(:,(NN+1)/2:-1:1); % sideband #-1
@@ -243,8 +243,8 @@ if 8==strunum % microring
 %     respc0=ones(size(respn1)); % sideband # 0
     respp1=respnall(:,(NN+1)/2:NN); % sideband #+1     
     
-    beat1cenv=conj(coffn1.*respn1).*(coffc0.*respc0)/(-1i);%complex envelop
-    beat2cenv=conj(coffc0.*respc0).*(coffp1.*respp1)/(-1i);%complex envelop    
+    beat1cenv=conj(coffn1.*respn1).*(coffc0.*respc0);%complex envelop
+    beat2cenv=conj(coffc0.*respc0).*(coffp1.*respp1);%complex envelop    
     % general solution  (end)  #####
 
     %%%%%%%%%%%% DSB  SSB
@@ -399,7 +399,7 @@ if fignum>4
 %         theta/pi*180,10*log10(hfint/max(hfint)*max(xcorrpatternmaxnol)^2));%hfint is energy, 10log; but xcorrpatternmaxnol is volt,^2
 %     plot(theta/pi*180,20*log10(xcorrpatternmaxnol));
     plot(theta/pi*180,(xcorrpatternmaxnol));
-    ylim([-40,5]);title('xcorr pattern');
+    ylim([0,1.1]);title('xcorr pattern');
     hold off
     
     
