@@ -2,7 +2,7 @@
 % 绘制二维阵列因子
 % 调用arrayfactorangFORgeneral.m, arrayfactorangFORgeneralRR.m
 clear
-N=8;
+N=16;
 c=299792458;
 diffindex=0:(N-2);
 centerfreq=10e9;
@@ -51,8 +51,8 @@ freqsection=35.1e9;
 
 % arrayfactorangFORgeneral( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1, 1 );
 cmpideal=arrayfactorangFORgeneralIDEAL( xposition, freqaxis, dgraxis, t, aimdegree0, centerfreq, dgrsection, freqsection, sigt1, 0, 1 );
-cmpue=arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, centerfreq, dgrsection, freqsection, sigt1, 3, 1 );
-fom1=cmpFoMcalc( dgraxis, aimdegree0, cmpideal, cmpue, 2 )
+cmpue=arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, centerfreq, dgrsection, freqsection, sigt1, 0, 1 );
+fom1=cmpFoMcalc( dgraxis, aimdegree0, cmpideal, cmpue, N, 2 )
 
 % hiap=figure(991);
 % lhiap=findall(hiap,'type','line');
