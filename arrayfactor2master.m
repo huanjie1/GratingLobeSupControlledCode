@@ -2,7 +2,7 @@
 % 绘制二维阵列因子
 % 调用arrayfactorangFORgeneral.m, arrayfactorangFORgeneralRR.m
 clear
-N=16;
+N=8;
 c=299792458;
 diffindex=0:(N-2);
 centerfreq=10e9;
@@ -30,7 +30,7 @@ xposition=xposition0-(min(xposition0)+max(xposition0))/2;
 % figure;stem(xposition,max(spacings)*ones(1,length(xposition)));hold on
 % plot(linspace(-max(xposition),max(xposition),length(spacings)),spacings)
 
-aimdegree0=60;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+aimdegree0=59;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 NN=8001;
 freqaxis=linspace(-40e9,40e9,NN);
@@ -50,10 +50,10 @@ dgrsection=0;
 freqsection=35.1e9;
 
 % arrayfactorangFORgeneral( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1, 1 );
-cmpideal=arrayfactorangFORgeneralIDEAL( xposition, freqaxis, dgraxis, t, aimdegree0, centerfreq, dgrsection, freqsection, sigt1, 0, 1 );
+% cmpideal=arrayfactorangFORgeneralIDEAL( xposition, freqaxis, dgraxis, t, aimdegree0, centerfreq, dgrsection, freqsection, sigt1, 0, 1 );
 cmpue=arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, centerfreq, dgrsection, freqsection, sigt1, 0, 1 );
-fom1=cmpFoMcalc( dgraxis, aimdegree0, cmpideal, cmpue, N, 2 )
-
+% fom1=cmpFoMcalc( dgraxis, aimdegree0, cmpideal, cmpue, N, 2 )
+fom1=cmpFoMcalcSIMP( dgraxis, aimdegree0, cmpue, N, spacing0/centerlambda, 2 )
 % hiap=figure(991);
 % lhiap=findall(hiap,'type','line');
 % yalliap=get(lhiap,'ydata');

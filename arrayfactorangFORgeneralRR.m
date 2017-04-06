@@ -29,12 +29,12 @@ window1=rectwin(antennanum)*ones(1,NN);
 
 if 0==strunum % ideal TTD
     dl0=-xposition*sin(aimtheta0)/c;
-    switchmode=1;
+    switchmode=0;
     
     if 0==switchmode % continue
         dl=dl0;
     else if 1==switchmode % uniform delay unit %Óë¶þ²æÊ÷Ê½¼æÈÝ£¿£¿£¿
-            delaybase=10e-12;   
+            delaybase=40e-12;   
             dl=delaybase*round(dl0/delaybase);
         else % delay unit with different steps for different element 
             switchbitnum=4;
