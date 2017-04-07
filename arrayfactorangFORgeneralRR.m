@@ -29,12 +29,12 @@ window1=rectwin(antennanum)*ones(1,NN);
 
 if 0==strunum % ideal TTD
     dl0=-xposition*sin(aimtheta0)/c;
-    switchmode=0;
+    switchmode=1;
     
     if 0==switchmode % continue
         dl=dl0;
     else if 1==switchmode % uniform delay unit %Óë¶þ²æÊ÷Ê½¼æÈÝ£¿£¿£¿
-            delaybase=40e-12;   
+            delaybase=20e-12;   
             dl=delaybase*round(dl0/delaybase);
         else % delay unit with different steps for different element 
             switchbitnum=4;
@@ -97,7 +97,7 @@ if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
 %         dstart=000;
 %         dend=90;
 %         d0=((xposition-xposition(1))/(xposition(end)-xposition(1))*(dend-dstart)+dstart).';%ps/nm
-        d0=(0:length(xposition)-1).'*100;
+        d0=(0:length(xposition)-1).'*10;
         b2=-lambda0^2/2/pi/c*d0/1e12*1e9;%1/s/s
         b1=0;
         b3=0;
@@ -404,13 +404,13 @@ if fignum>0
     xcorrpatternmax=max(abs(xcorrpattern).');
 %     xcorrpatternmaxnol=xcorrpatternmax/sum(xcorrpatternmax)*length(xcorrpatternmax);
     xcorrpatternmaxnol=xcorrpatternmax/max(xcorrpatternmax);
-    figure(992);hold on
+%     figure(992);hold on
 %     plot(theta/pi*180,20*log10(xcorrpatternmaxnol),...
 %         theta/pi*180,10*log10(hfint/max(hfint)*max(xcorrpatternmaxnol)^2));%hfint is energy, 10log; but xcorrpatternmaxnol is volt,^2
 %     plot(theta/pi*180,20*log10(xcorrpatternmaxnol));
-    plot(theta/pi*180,(xcorrpatternmaxnol));
-    ylim([0,1.1]);title('xcorr pattern');
-    hold off
+%     plot(theta/pi*180,(xcorrpatternmaxnol));
+%     ylim([0,1.1]);title('xcorr pattern');
+%     hold off
     
     
 %     figure;

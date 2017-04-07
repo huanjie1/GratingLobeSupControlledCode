@@ -56,12 +56,15 @@ cmpuemlw=drgaxis(cmpuemlrightindex)-drgaxis(cmpuemlleftindex);
 idealcmpnmth=idealcmpnm;
 idealcmpnmth(idealcmpnmth<spurth)=0;
 idealcmpnmth(idealmlleftindex:idealmlrightindex)=0;
-idealslgl=sum(idealcmpnmth)*(drgaxis(2)-drgaxis(1));
+idealslgl=sum(idealcmpnmth(idealcmpnmth>spurth)-spurth(idealcmpnmth>spurth))*(drgaxis(2)-drgaxis(1));
+idealcmpbaddrg=drgaxis(idealcmpnmth>spurth);
 
 cmpuenmth=cmpuenm;
 cmpuenmth(cmpuenmth<spurth)=0;
 cmpuenmth(cmpuemlleftindex:cmpuemlrightindex)=0;
-cmpueslgl=sum(cmpuenmth)*(drgaxis(2)-drgaxis(1));
+cmpueslgl=sum(cmpuenmth(cmpuenmth>spurth)-spurth(cmpuenmth>spurth))*(drgaxis(2)-drgaxis(1));
+cmpuebaddrg=drgaxis(cmpuenmth>spurth);
+
 
 %---------------
 cmpFoM=(idealdia/cmpuedia)*(idealmlw/cmpuemlw)*(idealslgl/cmpueslgl);
@@ -79,7 +82,10 @@ if fignum>0
         'linestyle','--','color','black')
     text(drgaxis(mlindex),beamwidthth*1.1,['beamwidth=' num2str(idealmlw) 'бу'],...
         'FontSize',14,'HorizontalAlignment','center');
-    area(drgaxis,idealcmpnmth,'FaceAlpha',0.3);
+%     area(drgaxis,idealcmpnmth,'FaceAlpha',0.3);
+    patch([idealcmpbaddrg, fliplr(idealcmpbaddrg)], ...
+        [max(idealcmpnmth(idealcmpnmth>spurth),spurth(idealcmpnmth>spurth)),...
+        fliplr(min(idealcmpnmth(idealcmpnmth>spurth),spurth(idealcmpnmth>spurth)))], 'r','FaceAlpha',0.3)
 %     line([-90 90],[spurth0 spurth0],'linestyle','--','color','black')
     plot(drgaxis,spurth,'linestyle','--','color','black');
     
@@ -89,7 +95,10 @@ if fignum>0
         'linestyle','--','color','black')
     text(drgaxis(mlindex),beamwidthth*1.1,['beamwidth=' num2str(cmpuemlw) 'бу'],...
         'FontSize',14,'HorizontalAlignment','center');
-    area(drgaxis,cmpuenmth,'FaceAlpha',0.3);
+%     area(drgaxis,cmpuenmth,'FaceAlpha',0.3);
+    patch([cmpuebaddrg, fliplr(cmpuebaddrg)], ...
+        [max(cmpuenmth(cmpuenmth>spurth),spurth(cmpuenmth>spurth)),...
+        fliplr(min(cmpuenmth(cmpuenmth>spurth),spurth(cmpuenmth>spurth)))], 'r','FaceAlpha',0.3)
 %     line([-90 90],[spurth0 spurth0],'linestyle','--','color','black')
     plot(drgaxis,spurth,'linestyle','--','color','black');
 end

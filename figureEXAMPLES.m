@@ -1,3 +1,11 @@
+% latex:
+% labels = {'$f_1(x)$', '$f_2(x)$', '$f_3(x)$', '$f_4(x)$'};
+% legend(labels, 'interpreter', 'latex', 'FontSize', 12)
+
+
+
+
+
 % % plot basis
 % 
 % fid1=fopen('K2.5data.csv');

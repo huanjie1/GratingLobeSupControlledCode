@@ -2,10 +2,10 @@
 % 绘制二维阵列因子
 % 调用arrayfactorangFORgeneral.m, arrayfactorangFORgeneralRR.m
 clear
-N=8;
+N=16;
 c=299792458;
 diffindex=0:(N-2);
-centerfreq=10e9;
+centerfreq=20e9;
 centerlambda=c/centerfreq;
 spacing0=1*centerlambda;
 
@@ -30,7 +30,7 @@ xposition=xposition0-(min(xposition0)+max(xposition0))/2;
 % figure;stem(xposition,max(spacings)*ones(1,length(xposition)));hold on
 % plot(linspace(-max(xposition),max(xposition),length(spacings)),spacings)
 
-aimdegree0=59;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+aimdegree0=-50;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 NN=8001;
 freqaxis=linspace(-40e9,40e9,NN);
@@ -42,7 +42,7 @@ dgraxis=linspace(-90,90,721);
 
 % sigt1=cos( 2*pi*10e9*t + pi*10e9/(ts*NN)*t.^2);
 % sigt1=cos( 2*pi*10e9*t).* exp(-(t/0.1e-9).^2);
-sigt1=[zeros(1,2000) sigeneratorfor2d( t(2001:6001),  'lfm', 0e9, 10e9 ) zeros(1,2000)];
+sigt1=[zeros(1,2000) sigeneratorfor2d( t(2001:6001),  'lfm', 4e9, centerfreq ) zeros(1,2000)];
 % figure;plot(t,sigt1);
 % title('sig waveform');
 
@@ -53,7 +53,10 @@ freqsection=35.1e9;
 % cmpideal=arrayfactorangFORgeneralIDEAL( xposition, freqaxis, dgraxis, t, aimdegree0, centerfreq, dgrsection, freqsection, sigt1, 0, 1 );
 cmpue=arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, centerfreq, dgrsection, freqsection, sigt1, 0, 1 );
 % fom1=cmpFoMcalc( dgraxis, aimdegree0, cmpideal, cmpue, N, 2 )
-fom1=cmpFoMcalcSIMP( dgraxis, aimdegree0, cmpue, N, spacing0/centerlambda, 2 )
+% fom1=cmpFoMcalc( dgraxis, aimdegree0, cmpideal, cmpue, N, spacing0/centerlambda, 2 )
+% fomideal=cmpFoMcalcSIMP( dgraxis, aimdegree0, cmpue, N, spacing0/centerlambda, 2 )
+% fomideal=cmpFoMcalcV2( dgraxis, aimdegree0, cmpideal, N, spacing0/centerlambda, 0 )
+fomcmpue=cmpFoMcalcV2( dgraxis, aimdegree0, cmpue, N, spacing0/centerlambda, 1 )
 % hiap=figure(991);
 % lhiap=findall(hiap,'type','line');
 % yalliap=get(lhiap,'ydata');
