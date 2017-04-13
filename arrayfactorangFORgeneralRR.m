@@ -97,7 +97,7 @@ if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
 %         dstart=000;
 %         dend=90;
 %         d0=((xposition-xposition(1))/(xposition(end)-xposition(1))*(dend-dstart)+dstart).';%ps/nm
-        d0=(0:length(xposition)-1).'*10;
+        d0=(0:length(xposition)-1).'*20;
         b2=-lambda0^2/2/pi/c*d0/1e12*1e9;%1/s/s
         b1=0;
         b3=0;
@@ -126,15 +126,15 @@ if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
     % general solution £¨begin£©    Elapsed time is 0.014591 seconds.
 %     wr=w((NN-1)/2+1:NN);    
     modindex=0.1;
-    alphapolm=117   /180*pi;
-    coffn1=-1 *besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #-1
+    alphapolm=-10   /180*pi;
+    coffn1= 1 *besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #-1
     coffc0= 1 *besselj(0,modindex)*ones(antennanum,(NN+1)/2);  % sideband # 0
-    coffp1=-1 *besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #+1
+    coffp1= 1 *besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #+1
     
 %     coffn1=( -cos(alphapolm) -1j*sin(alphapolm) )*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #-1
 %     coffc0=(  cos(alphapolm) -1j*sin(alphapolm) )*besselj(0,modindex)*ones(antennanum,(NN+1)/2);  % sideband # 0
 %     coffp1=(  cos(alphapolm) +1j*sin(alphapolm) )*besselj(1,modindex)*ones(antennanum,(NN+1)/2);  % sideband #+1
-    
+%     
 %     Elapsed time is 0.011766 seconds.
     respnall=optiresDISP(b1,b2,b3,w0,wc,w);
     respn1=respnall(:,(NN+1)/2:-1:1); % sideband #-1
@@ -152,7 +152,8 @@ if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
 
     %%%%%%%%%%%% DSB  SSB
     arrayresponser=1*beat1cenv+1*beat2cenv;
-    arrayresponse=[conj(arrayresponser(:,end:-1:2)) arrayresponser];
+%     arrayresponse=[conj(arrayresponser(:,end:-1:2)) arrayresponser];
+    arrayresponse=[conj(arrayresponser(:,end:-1:2)) abs(arrayresponser(:,1)) arrayresponser(:,2:end)];%dc must be real!!
     
 end
 
@@ -165,7 +166,7 @@ if 4==strunum   %ideal phase shifter
     ps=psbase*round(ps0/psbase);
     
     arrayresponser=exp(1i*ps);
-    arrayresponse=[conj(arrayresponser(:,end:-1:1)) zeros(antennanum,1) arrayresponser];
+    arrayresponse=[conj(arrayresponser(:,end:-1:1)) ones(antennanum,1) arrayresponser];
 end
 
 if 5==strunum   %real phase shifter using limited TTD
@@ -251,7 +252,7 @@ if 8==strunum % microring
 
     %%%%%%%%%%%% DSB  SSB
     arrayresponser=1*beat1cenv+1*beat2cenv;
-    arrayresponse=[conj(arrayresponser(:,end:-1:2)) arrayresponser];
+    arrayresponse=[conj(arrayresponser(:,end:-1:2)) abs(arrayresponser(:,1)) arrayresponser(:,2:end)];%dc must be real!!
 end
 
 % figure;imagesc(w((NN-1)/2+1:NN)/2/pi,xposition,angle(arrayresponse(:,(NN-1)/2+1:NN)));xlabel('Frequency/GHz');ylabel('xposition');
@@ -294,7 +295,7 @@ end
 % end
 
 
-if fignum>0
+if fignum>0.5
     h=abs(allresponse);
     figure;imagesc(w((NN-1)/2:NN)/2/pi/1E9,theta/pi*180,h(:,(NN-1)/2:NN));xlabel('Frequency/GHz');
 %     figure;imagesc(w/2/pi,theta/pi*180,h);xlabel('Frequency/GHz');
@@ -389,11 +390,12 @@ if fignum>0
         sigf1out=(ones(length(dgraxis),1)*sigf1).*allresponse;
         sigt1out=ifft(ifftshift(sigf1out,2),NN,2);
     end
-    
+
     %partial xcorr
     tlmax=3.5e-9;
     maxl=round(tlmax/ts);
     tcor=ts*(-maxl:maxl);
+    xcorr0=zeros(length(theta),2*maxl+1);
     for thind=1:length(theta)      
         xcorr0(thind,:)=xcorr(sigt1out(thind,:),sigt1,maxl);
     end

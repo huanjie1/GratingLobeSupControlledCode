@@ -22,7 +22,7 @@ idealdia=idealcmpnm1(mlindex);
 cmpuedia=cmpuenm1(mlindex);
 
 % % maxspur------------------------------------------------------------------------------------------
-ideallmax=[false diff(sign(diff(idealcmpnm1)))==-2 false];
+% ideallmax=[false diff(sign(diff(idealcmpnm1)))==-2 false];
 ideallmin=[true diff(sign(diff(idealcmpnm1)))==2 true];
 ideallminindex=find(ideallmin);
 [~,ideallmindd1]=min(abs(ideallminindex-mlindex));
@@ -37,8 +37,9 @@ else if ideallminindex(ideallmindd1)<mlindex
         regionright=ideallminindex(ideallmindd1+1);
     end
 end
-ideallmax(regionleft:regionright)=false;
-idealmaxspur=max(idealcmpnm1(ideallmax));
+% ideallmax(regionleft:regionright)=false;
+% idealmaxspur=max(idealcmpnm1(ideallmax));
+idealmaxspur=max(idealcmpnm1([1:regionleft regionright:end]));
 
 cmpuelmax=[false diff(sign(diff(cmpuenm1)))== -2 false];
 % cmpuelmin=[true diff(sign(diff(cmpuenm1)))== 2 true];
@@ -53,10 +54,11 @@ cmpuelmax=[false diff(sign(diff(cmpuenm1)))== -2 false];
 %     end
 % end
 cmpuelmax(regionleft:regionright)=false;
+% cmpuemaxspur=max(cmpuenm1([1:regionleft regionright:end]));
 cmpuemaxspur=max(cmpuenm1(cmpuelmax));
 
 if fignum>0
-    figure;plot(drgaxis,idealcmpnm1,drgaxis,cmpuenm1,drgaxis,0.01*cmpuelmax,':');
+    figure;plot(drgaxis,cmpuenm1,drgaxis,idealcmpnm1,drgaxis,0.01*cmpuelmax,':');
     text(-90,0.02,{['cmpuevar = ' num2str(cmpuevar)];...
                    ['idealcmpvar = ' num2str(idealcmpvar)];...
                    ['cmpuedia = ' num2str(cmpuedia)];...
