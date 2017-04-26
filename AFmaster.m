@@ -6,13 +6,13 @@
 arraynum=16;
 ratio=1.5;
 fc=10e9;
-fbw=0.1;
+fbw=0.4;
 
 filenamepre=['an' num2str(arraynum) ...
           '_r' num2str(ratio) ... 
           '_fc' num2str(fc/1e9)...
           '_fbw' num2str(fbw)...
-          '_step0.1'];
+          '_step0.1new'];
 
 mainlobedrghalf=linspace(-60,0,121);
 cmpfomarrayhalf=zeros(1,length(mainlobedrghalf));

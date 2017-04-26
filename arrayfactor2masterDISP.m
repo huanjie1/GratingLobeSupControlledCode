@@ -30,7 +30,7 @@ xposition=xposition0-(min(xposition0)+max(xposition0))/2;
 % figure;stem(xposition,max(spacings)*ones(1,length(xposition)));hold on
 % plot(linspace(-max(xposition),max(xposition),length(spacings)),spacings)
 
-aimdegree0=60;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+aimdegree0=00;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 NN=8001;
 freqaxis=linspace(-40e9,40e9,NN);
@@ -49,7 +49,7 @@ sigt1=[zeros(1,2000) sigeneratorfor2d( t(2001:6001),  'lfm', 8e9, centerfreq ) z
 dgrsection=0;
 freqsection=35.1e9;
 
-d2=1:1:20;%ps/nm
+d2=0.25:0.25:20;%ps/nm
 fomarray=zeros(1,length(d2));
 
 for dind=1:length(d2)
@@ -58,10 +58,10 @@ for dind=1:length(d2)
     fomarray(dind)=cmpFoMcalcV2( dgraxis, aimdegree0, cmpue, N, spacing0/centerlambda, 0 );
 end
 
-plot(d2,fomarray)
+plot(d2,fomarray);hold on
 
 mout=[d2;fomarray];
-fid1=fopen(['an16_r1.5_fc20_fbw0.4_ml60_dsb.csv'],'w');
+fid1=fopen(['an16_r1.5_fc20_fbw0.4_ml00fix_ssb.csv'],'w');
 fprintf(fid1,'%.9e,%.9e\n',mout);
 fclose(fid1);
 

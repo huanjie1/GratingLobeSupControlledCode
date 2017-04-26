@@ -29,12 +29,13 @@ window1=rectwin(antennanum)*ones(1,NN);
 
 if 0==strunum % ideal TTD
     dl0=-xposition*sin(aimtheta0)/c;
+    dl0=dl0-min(dl0);
     switchmode=1;
     
     if 0==switchmode % continue
         dl=dl0;
     else if 1==switchmode % uniform delay unit %Óë¶þ²æÊ÷Ê½¼æÈÝ£¿£¿£¿
-            delaybase=20e-12;   
+            delaybase=40e-12;   
             dl=delaybase*round(dl0/delaybase);
         else % delay unit with different steps for different element 
             switchbitnum=4;
@@ -73,7 +74,7 @@ if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
     w0=2*pi*c/lambda0;
     
     if 1==strunum  % multi-wavelength
-        d0=300;%ps/nm
+        d0=600;%ps/nm
         b2=-lambda0^2/2/pi/c*d0/1e12*1e9;%1/s/s
         b1=0;
         b3=0;
@@ -97,10 +98,15 @@ if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
 %         dstart=000;
 %         dend=90;
 %         d0=((xposition-xposition(1))/(xposition(end)-xposition(1))*(dend-dstart)+dstart).';%ps/nm
-        d0=(0:length(xposition)-1).'*20;
+        d0=(0:length(xposition)-1).'*40/3;
         b2=-lambda0^2/2/pi/c*d0/1e12*1e9;%1/s/s
         b1=0;
         b3=0;
+%         %FIX!!!        
+%         wc=w0 + (xposition(2)-xposition(1)) * ...
+%             ( sin(aimtheta0) - (b2(2)-b2(1))*c*1*pi*centerfreq / (xposition(2)-xposition(1)) )...
+%             / c / (b2(2)-b2(1));
+        %no fox
         wc=w0 + (xposition(2)-xposition(1)) * sin(aimtheta0) / c / (b2(2)-b2(1));
         lc=2*pi*c/wc
     end

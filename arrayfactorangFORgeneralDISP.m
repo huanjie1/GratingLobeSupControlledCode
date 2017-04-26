@@ -61,7 +61,12 @@ if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
         b2=-lambda0^2/2/pi/c*d0/1e12*1e9;%1/s/s
         b1=0;
         b3=0;
-        wc=w0 + (xposition(2)-xposition(1)) * sin(aimtheta0) / c / (b2(2)-b2(1));
+        %FIX!!!        
+        wc=w0 + (xposition(2)-xposition(1)) * ...
+            ( sin(aimtheta0) - (b2(2)-b2(1))*c*1*pi*centerfreq / (xposition(2)-xposition(1)) )...
+            / c / (b2(2)-b2(1));
+%         %no fox
+%         wc=w0 + (xposition(2)-xposition(1)) * sin(aimtheta0) / c / (b2(2)-b2(1));
         lc=2*pi*c/wc
     end
     
@@ -94,7 +99,7 @@ if 0.5<strunum && strunum<3.5 %DISPERSION-BASED
     % general solution  (end)  #####
 
     %%%%%%%%%%%% DSB  SSB
-    arrayresponser=1*beat1cenv+1*beat2cenv;
+    arrayresponser=0*beat1cenv+1*beat2cenv;
     arrayresponse=[conj(arrayresponser(:,end:-1:2)) abs(arrayresponser(:,1)) arrayresponser(:,2:end)];
     
 end
