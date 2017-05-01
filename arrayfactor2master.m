@@ -30,7 +30,7 @@ xposition=xposition0-(min(xposition0)+max(xposition0))/2;
 % figure;stem(xposition,max(spacings)*ones(1,length(xposition)));hold on
 % plot(linspace(-max(xposition),max(xposition),length(spacings)),spacings)
 
-aimdegree0=14.5;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+aimdegree0=0;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 NN=8001;
 freqaxis=linspace(-40e9,40e9,NN);

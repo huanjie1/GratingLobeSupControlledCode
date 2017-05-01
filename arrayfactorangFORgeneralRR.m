@@ -30,7 +30,7 @@ window1=rectwin(antennanum)*ones(1,NN);
 if 0==strunum % ideal TTD
     dl0=-xposition*sin(aimtheta0)/c;
     dl0=dl0-min(dl0);
-    switchmode=1;
+    switchmode=0;
     
     if 0==switchmode % continue
         dl=dl0;
@@ -275,9 +275,25 @@ ampmask=ones(antennanum,1)*exp(-((abs(w/2/pi)-10e9)/5.5e9).^18);
 % st2Dresponse=fftshift(fft(conj(arrayresponse),length(theta),1),1); 
 % figure;imagesc(w((NN-1)/2:NN)/2/pi/1e9,linspace(-pi,pi,length(theta)),abs(st2Dresponse(:,(NN-1)/2:NN)));xlabel('Frequency/GHz');
 
+load('E:\¿Î¼þ\MWP\0PROJECTS\201410TTDnew2DTTD\TRANSonAP\col\test3\singleELE\singleELE_amp_ALL.mat');
+load('E:\¿Î¼þ\MWP\0PROJECTS\201410TTDnew2DTTD\TRANSonAP\col\test3\singleELE\singleELE_phase_ALL.mat');
+responseele=ampallele(:,1:10:end).*exp(1i*phaseallele(:,1:10:end));
+responseelefull0=[zeros(size(responseele,1),2700) conj(responseele(:,end:-1:1)) ...
+                zeros(size(responseele,1),1399) ...
+                responseele zeros(size(responseele,1),2700)];
+
+[wm181,tm181]=meshgrid(w,-90:1:90);    
+[wm721,tm721]=meshgrid(w,-90:0.25:90);  
+responseelefull = interp2(wm181,tm181,responseelefull0,wm721,tm721); 
+imagesc(w/2/pi/1e9,linspace(-pi,pi,length(theta)),abs(responseelefull));
+
+
 allresponse=ones(length(theta),NN);
 for thind=1:length(theta)
-    spaceresponse=exp(1i*(xposition*sin(theta(thind))/c).'*w);
+%     spaceresponse=exp(1i*(xposition*sin(theta(thind))/c).'*w);
+    spaceresponse=exp(1i*(xposition*sin(theta(thind))/c).'*w).*(ones(length(xposition),1)*responseelefull(thind,:));
+    
+    
 %     if abs(theta(thind)-aimtheta0)/pi*180<0.2
 %         figure;
 %         allr01=arrayresponse.*window1.*spaceresponse;
