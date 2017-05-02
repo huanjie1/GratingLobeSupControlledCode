@@ -284,7 +284,7 @@ responseelefull0=[zeros(size(responseele,1),2700) conj(responseele(:,end:-1:1)) 
 
 [wm181,tm181]=meshgrid(w,-90:1:90);    
 [wm721,tm721]=meshgrid(w,-90:0.25:90);  
-responseelefull = interp2(wm181,tm181,responseelefull0,wm721,tm721); 
+responseelefull = interp2(wm181,tm181,responseelefull0,wm721,tm721,'nearest'); 
 imagesc(w/2/pi/1e9,linspace(-pi,pi,length(theta)),abs(responseelefull));
 
 
@@ -414,7 +414,7 @@ if fignum>0
     end
 
     %partial xcorr
-    tlmax=3.5e-9;
+    tlmax=23.5e-9;
     maxl=round(tlmax/ts);
     tcor=ts*(-maxl:maxl);
     xcorr0=zeros(length(theta),2*maxl+1);
@@ -423,7 +423,7 @@ if fignum>0
     end
     
     xcorrpattern=abs(hilbert(xcorr0.').');
-%     figure;imagesc(tcor,theta/pi*180,abs(xcorrpattern));
+    figure;imagesc(tcor,theta/pi*180,abs(xcorrpattern));
     
     xcorrpatternmax=max(abs(xcorrpattern).');
 %     xcorrpatternmaxnol=xcorrpatternmax/sum(xcorrpatternmax)*length(xcorrpatternmax);

@@ -7,7 +7,7 @@ c=299792458;
 diffindex=0:(N-2);
 centerfreq=10e9;
 centerlambda=c/centerfreq;
-spacing0=1.5*centerlambda;
+spacing0=1.0*centerlambda;
 
 devimode='squ';
 % devimode='squ';*7/2
