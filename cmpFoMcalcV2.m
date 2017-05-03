@@ -23,15 +23,23 @@ cmpuedia=cmpuenm1(mlindex);
 
 % % maxspur------------------------------------------------------------------------------------------
 % ideallmax=[false diff(sign(diff(idealcmpnm1)))==-2 false];
-ideallmin=[true diff(sign(diff(idealcmpnm1)))==2 true];
+ideallmin=[false diff(sign(diff(idealcmpnm1)))==2 false];
 ideallminindex=find(ideallmin);
 [~,ideallmindd1]=min(abs(ideallminindex-mlindex));
 if ideallminindex(ideallmindd1)>mlindex
-    regionleft=ideallminindex(ideallmindd1-1);
+    if 1==ideallmindd1
+        regionleft=1;
+    else
+        regionleft=ideallminindex(ideallmindd1-1);
+    end
     regionright=ideallminindex(ideallmindd1);
 else if ideallminindex(ideallmindd1)<mlindex
         regionleft=ideallminindex(ideallmindd1);
-        regionright=ideallminindex(ideallmindd1+1);
+        if length(ideallminindex)==ideallmindd1
+            regionright=length(idealcmpnm1);
+        else
+            regionright=ideallminindex(ideallmindd1+1);
+        end
     else
         regionleft=ideallminindex(ideallmindd1-1);
         regionright=ideallminindex(ideallmindd1+1);

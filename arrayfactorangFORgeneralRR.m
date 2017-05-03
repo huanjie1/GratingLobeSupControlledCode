@@ -261,6 +261,42 @@ if 8==strunum % microring
     arrayresponse=[conj(arrayresponser(:,end:-1:2)) abs(arrayresponser(:,1)) arrayresponser(:,2:end)];%dc must be real!!
 end
 
+
+
+if 9==strunum % switch-based TTD with finite extinction ratio and loss
+    dl0=-xposition*sin(aimtheta0)/c;
+    dl0=dl0-min(dl0);
+    delaybase=0.4*1/centerfreq; %%%
+    exr=10;%dB
+    exrl=10^(-exr/20);
+    losspermm=0.1;%dB/mm
+    neff=1.5;
+    losspersl=10^(-c/neff*1e-12*1000*losspermm/20);%dB/ps
+    swstate=fliplr(dec2bin(round(dl0/delaybase)));
+    
+    arrayresponse=ones(antennanum,NN);
+    
+    for anrind=1:size(swstate,1)
+        for swstepind=1:size(swstate,2)
+            dlstepnow=delaybase*2^(swstepind-1);
+            dlpathres=(losspersl^(dlstepnow/1e-12))*exp(1i*dlstepnow*w);
+            if strcmp(swstate(anrind,swstepind),'1')                
+                arrayresponse(anrind,:)=arrayresponse(anrind,:).*...
+                    ((1-exrl)*dlpathres+exrl);
+            else
+                arrayresponse(anrind,:)=arrayresponse(anrind,:).*...
+                    ((1-exrl)+exrl*dlpathres);
+            end
+        end
+    end
+%     figure;imagesc(angle(arrayresponse));
+%     figure;imagesc(abs(arrayresponse));
+
+end
+
+
+
+
 % figure;imagesc(w((NN-1)/2+1:NN)/2/pi,xposition,angle(arrayresponse(:,(NN-1)/2+1:NN)));xlabel('Frequency/GHz');ylabel('xposition');
 % figure;
 % for inda=1:antennanum
@@ -275,23 +311,25 @@ ampmask=ones(antennanum,1)*exp(-((abs(w/2/pi)-10e9)/5.5e9).^18);
 % st2Dresponse=fftshift(fft(conj(arrayresponse),length(theta),1),1); 
 % figure;imagesc(w((NN-1)/2:NN)/2/pi/1e9,linspace(-pi,pi,length(theta)),abs(st2Dresponse(:,(NN-1)/2:NN)));xlabel('Frequency/GHz');
 
-load('E:\课件\MWP\0PROJECTS\201410TTDnew2DTTD\TRANSonAP\col\test3\singleELE\singleELE_amp_ALL.mat');
-load('E:\课件\MWP\0PROJECTS\201410TTDnew2DTTD\TRANSonAP\col\test3\singleELE\singleELE_phase_ALL.mat');
-responseele=ampallele(:,1:10:end).*exp(1i*phaseallele(:,1:10:end));
-responseelefull0=[zeros(size(responseele,1),2700) conj(responseele(:,end:-1:1)) ...
-                zeros(size(responseele,1),1399) ...
-                responseele zeros(size(responseele,1),2700)];
 
-[wm181,tm181]=meshgrid(w,-90:1:90);    
-[wm721,tm721]=meshgrid(w,-90:0.25:90);  
-responseelefull = interp2(wm181,tm181,responseelefull0,wm721,tm721,'nearest'); 
-imagesc(w/2/pi/1e9,linspace(-pi,pi,length(theta)),abs(responseelefull));
+% % real antenna
+% load('E:\课件\MWP\0PROJECTS\201410TTDnew2DTTD\TRANSonAP\col\test3\singleELE\singleELE_amp_ALL.mat');
+% load('E:\课件\MWP\0PROJECTS\201410TTDnew2DTTD\TRANSonAP\col\test3\singleELE\singleELE_phase_ALL.mat');
+% responseele=ampallele(:,1:10:end).*exp(1i*phaseallele(:,1:10:end));
+% responseelefull0=[zeros(size(responseele,1),2700) conj(responseele(:,end:-1:1)) ...
+%                 zeros(size(responseele,1),1399) ...
+%                 responseele zeros(size(responseele,1),2700)];
+% 
+% [wm181,tm181]=meshgrid(w,-90:1:90);    
+% [wm721,tm721]=meshgrid(w,-90:0.25:90);  
+% responseelefull = interp2(wm181,tm181,responseelefull0,wm721,tm721,'nearest'); 
+% % figure;imagesc(w/2/pi/1e9,linspace(-pi,pi,length(theta)),abs(responseelefull));
 
 
 allresponse=ones(length(theta),NN);
 for thind=1:length(theta)
-%     spaceresponse=exp(1i*(xposition*sin(theta(thind))/c).'*w);
-    spaceresponse=exp(1i*(xposition*sin(theta(thind))/c).'*w).*(ones(length(xposition),1)*responseelefull(thind,:));
+    spaceresponse=exp(1i*(xposition*sin(theta(thind))/c).'*w);
+%     spaceresponse=exp(1i*(xposition*sin(theta(thind))/c).'*w).*(ones(length(xposition),1)*responseelefull(thind,:));
     
     
 %     if abs(theta(thind)-aimtheta0)/pi*180<0.2
@@ -414,7 +452,7 @@ if fignum>0
     end
 
     %partial xcorr
-    tlmax=23.5e-9;
+    tlmax=13.5e-9;
     maxl=round(tlmax/ts);
     tcor=ts*(-maxl:maxl);
     xcorr0=zeros(length(theta),2*maxl+1);
@@ -423,7 +461,7 @@ if fignum>0
     end
     
     xcorrpattern=abs(hilbert(xcorr0.').');
-    figure;imagesc(tcor,theta/pi*180,abs(xcorrpattern));
+%     figure;imagesc(tcor,theta/pi*180,abs(xcorrpattern));
     
     xcorrpatternmax=max(abs(xcorrpattern).');
 %     xcorrpatternmaxnol=xcorrpatternmax/sum(xcorrpatternmax)*length(xcorrpatternmax);

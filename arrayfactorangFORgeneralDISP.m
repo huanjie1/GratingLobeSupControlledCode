@@ -2,7 +2,7 @@ function [ xcorrpatternmaxnol, allresponse] = arrayfactorangFORgeneralDISP( xpos
 % arrayfactorangFORgeneralDISP.m
 % 频率/角度二维图，一维布阵，任意排布，利用色散响应计算（用于色散参数）
 % 一维线阵的坐标向量，频率轴，角度轴，时间轴，目标角度，角度截面位置，频率截面位置，时域信号波形，波束形成网络结构选择，作图参数，附加参数
-% 被arrayfactor2master.m调用
+% 被arrayfactor2masterDISP.m调用
 % 
 
 c=299792458;
@@ -211,7 +211,7 @@ if fignum>0
     end
     
     %partial xcorr
-    tlmax=3.5e-9;
+    tlmax=13.5e-9;
     maxl=round(tlmax/ts);
     tcor=ts*(-maxl:maxl);
     for thind=1:length(theta)      

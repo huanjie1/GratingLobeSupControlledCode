@@ -7,7 +7,7 @@ c=299792458;
 diffindex=0:(N-2);
 centerfreq=10e9;
 centerlambda=c/centerfreq;
-spacing0=1.0*centerlambda;
+spacing0=1.5*centerlambda;
 
 devimode='squ';
 % devimode='squ';*7/2
@@ -30,7 +30,7 @@ xposition=xposition0-(min(xposition0)+max(xposition0))/2;
 % figure;stem(xposition,max(spacings)*ones(1,length(xposition)));hold on
 % plot(linspace(-max(xposition),max(xposition),length(spacings)),spacings)
 
-aimdegree0=0;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+aimdegree0=15.5;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 NN=8001;
 freqaxis=linspace(-40e9,40e9,NN);
@@ -51,7 +51,7 @@ freqsection=35.1e9;
 
 % arrayfactorangFORgeneral( xposition, freqaxis, dgraxis, t, aimdegree0, dgrsection, freqsection, sigt1, 1 );
 % cmpideal=arrayfactorangFORgeneralIDEAL( xposition, freqaxis, dgraxis, t, aimdegree0, centerfreq, dgrsection, freqsection, sigt1, 0, 1 );
-cmpue=arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, centerfreq, dgrsection, freqsection, sigt1, 0, 1 );
+cmpue=arrayfactorangFORgeneralRR( xposition, freqaxis, dgraxis, t, aimdegree0, centerfreq, dgrsection, freqsection, sigt1, 9, 1 );
 % fom1=cmpFoMcalc( dgraxis, aimdegree0, cmpideal, cmpue, N, 2 )
 % fom1=cmpFoMcalc( dgraxis, aimdegree0, cmpideal, cmpue, N, spacing0/centerlambda, 2 )
 % fomideal=cmpFoMcalcSIMP( dgraxis, aimdegree0, cmpue, N, spacing0/centerlambda, 2 )
