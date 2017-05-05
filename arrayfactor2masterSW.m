@@ -49,8 +49,9 @@ sigt1=[zeros(1,2000) sigeneratorfor2d( t(2001:6001),  'lfm', 4e9, centerfreq ) z
 dgrsection=0;
 freqsection=35.1e9;
 
-lossarray=0:0.01:0.19;
-exrarray=40:-1:9;
+% lossarray=0:0.04:0.19;%dB/mm
+lossarray=[0:1:40]/200;% numbers for dB/ns  200mm/ns
+exrarray=40:-1:8;%dB
 
 fommatrix=zeros(length(lossarray),length(exrarray));
 
@@ -62,7 +63,7 @@ for lossind=1:length(lossarray)
     end
 end
 
-save(['fommatrix.mat'],'fommatrix');
+save(['fommatrix_15.5ml_0.4step.mat'],'fommatrix');
 
 [ee,ll]=meshgrid(exrarray,lossarray);
 figure;contour(ee,ll,fommatrix)

@@ -34,7 +34,7 @@ window1=rectwin(antennanum)*ones(1,NN);
 if 9==strunum % switch-based TTD with finite extinction ratio and loss
     dl0=-xposition*sin(aimtheta0)/c;
     dl0=dl0-min(dl0);
-    delaybase=0.2*1/centerfreq; %%%
+    delaybase=0.4*1/centerfreq; %%%
 %     exr=25;%dB
     exrl=10^(-exr/20);
     losspermm=loss;%dB/mm
