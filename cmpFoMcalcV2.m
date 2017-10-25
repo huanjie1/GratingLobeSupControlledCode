@@ -17,15 +17,15 @@ idealcmpvar=sum((drgaxis-mainlobedir).^2.*idealcmpnm1)*(drgaxis(2)-drgaxis(1));
 cmpuevar=sum((drgaxis-mainlobedir).^2.*cmpuenm1)*(drgaxis(2)-drgaxis(1));
 
 % % main lobe deviation------------------------------------------------------------------------------------------
-[~,mlindex]=min(abs(drgaxis-mainlobedir));
+[~,mlindex]=min(abs(drgaxis-mainlobedir));%index of main lobe 
 idealdia=idealcmpnm1(mlindex);
 cmpuedia=cmpuenm1(mlindex);
 
 % % maxspur------------------------------------------------------------------------------------------
 % ideallmax=[false diff(sign(diff(idealcmpnm1)))==-2 false];
-ideallmin=[false diff(sign(diff(idealcmpnm1)))==2 false];
-ideallminindex=find(ideallmin);
-[~,ideallmindd1]=min(abs(ideallminindex-mlindex));
+ideallmin=[false diff(sign(diff(idealcmpnm1)))==2 false];%minima
+ideallminindex=find(ideallmin);%get the indexes of the minimas 
+[~,ideallmindd1]=min(abs(ideallminindex-mlindex)); % which minima is closest to the main lobe 
 if ideallminindex(ideallmindd1)>mlindex
     if 1==ideallmindd1
         regionleft=1;
@@ -63,7 +63,12 @@ cmpuelmax=[false diff(sign(diff(cmpuenm1)))== -2 false];
 % end
 cmpuelmax(regionleft:regionright)=false;
 % cmpuemaxspur=max(cmpuenm1([1:regionleft regionright:end]));
-cmpuemaxspur=max(cmpuenm1(cmpuelmax));
+cmpuemaxspur=max(cmpuenm1(cmpuelmax)); %max of maxima
+
+if isempty(cmpuemaxspur)
+    cmpuemaxspur=max(cmpuenm1([1:regionleft regionright:end]));
+end
+
 
 if fignum>0
     figure;plot(drgaxis,cmpuenm1,drgaxis,idealcmpnm1,drgaxis,0.01*cmpuelmax,':');
