@@ -31,7 +31,12 @@ for thind=1:length(theta)
         else
             antsponse=squeeze(antresponsearray(thind,:,:));
         end
-        allresponse(thind,:)=sum(netresponse.*window1.*spaceresponse.*antsponse);
+        
+        if antennanum>1
+            allresponse(thind,:)=sum(netresponse.*window1.*spaceresponse.*antsponse);
+        else
+            allresponse(thind,:)=netresponse.*window1.*spaceresponse.*antsponse;
+        end
         
     end
 end
@@ -78,6 +83,9 @@ if fignum>0.5
 %     sdy2=sdy1;
 %     aa1=patch(sdx1,sdy1,'black','EdgeColor','none','facealpha',0.3);
 %     aa2=patch(sdx2,sdy2,'black','EdgeColor','none','facealpha',0.3);
+
+    figure;imagesc(w((NN-1)/2:NN)/2/pi/1E9,sin(theta),h(:,(NN-1)/2:NN));xlabel('时间频率/GHz');ylabel('归一化空间频率/m^{-1}');
+    ax=gca;ax.FontSize=18;
     
 end
 

@@ -33,7 +33,8 @@ if ideallminindex(ideallmindd1)>mlindex
         regionleft=ideallminindex(ideallmindd1-1);
     end
     regionright=ideallminindex(ideallmindd1);
-else if ideallminindex(ideallmindd1)<mlindex
+else
+    if ideallminindex(ideallmindd1)<mlindex
         regionleft=ideallminindex(ideallmindd1);
         if length(ideallminindex)==ideallmindd1
             regionright=length(idealcmpnm1);
@@ -48,6 +49,10 @@ end
 % ideallmax(regionleft:regionright)=false;
 % idealmaxspur=max(idealcmpnm1(ideallmax));
 idealmaxspur=max(idealcmpnm1([1:regionleft regionright:end]));
+
+if isempty(idealmaxspur)
+    idealmaxspur=max(idealcmpnm1);
+end
 
 cmpuelmax=[false diff(sign(diff(cmpuenm1)))== -2 false];
 % cmpuelmin=[true diff(sign(diff(cmpuenm1)))== 2 true];

@@ -46,7 +46,8 @@ ts=1/2/40e9;
 t=-(NN-1)/2*ts : ts : ts*(NN-1)/2;
 
 % dgraxis=linspace(-90,90,37); %for waterfall
-dgraxis=linspace(-90,90,721);
+% dgraxis=linspace(-90,90,721);
+dgraxis=asin(linspace(-1,1,721))*180/pi;
 
 % sigt1=cos( 2*pi*10e9*t + pi*10e9/(ts*NN)*t.^2);
 % sigt1=cos( 2*pi*10e9*t).* exp(-(t/0.1e-9).^2);
@@ -63,7 +64,7 @@ freqsection=35.1e9;
 
 %% 通道响应
 
-netresponse = M201710ChanRespCalc( xposition, freqaxis, aimdegree0, centerfreq, 1.5 );
+netresponse = M201710ChanRespCalc( xposition, freqaxis, aimdegree0, centerfreq, 13 );
 
 % % draw netresponse
 % figure;imagesc(freqaxis((NN-1)/2+1:NN),xposition,angle(netresponse(:,(NN-1)/2+1:NN)));xlabel('Frequency/GHz');ylabel('xposition');
@@ -74,7 +75,7 @@ netresponse = M201710ChanRespCalc( xposition, freqaxis, aimdegree0, centerfreq, 
 % figure;imagesc(freqaxis((NN-1)/2+1:NN),xposition,abs(netresponse(:,(NN-1)/2+1:NN)));xlabel('Frequency/GHz');ylabel('xposition');
 % figure;
 % for inda=1:N
-%     plot(freqaxis((NN-1)/2+1:NN),abs(netresponse(inda,(NN-1)/2+1:NN)));hold on
+%     plot(freqaxis((NN-1)/2+1:NN)/1e9,abs(netresponse(inda,(NN-1)/2+1:NN)));hold on
 % end
 
 % % band pass
@@ -93,13 +94,13 @@ netresponse = M201710ChanRespCalc( xposition, freqaxis, aimdegree0, centerfreq, 
 
 %% 天线响应
 
-antresponsearray  = M201710ANTcalc( xposition, freqaxis, dgraxis, centerfreq, 0);
+antresponsearray  = M201710ANTcalc( xposition, freqaxis, dgraxis, centerfreq, 2);
 
 % % draw antresponsearray
-% figure;imagesc(freqaxis((NN-1)/2+1:NN),dgraxis,angle(antresponsearray(:,(NN-1)/2+1:NN)));xlabel('Frequency/GHz');ylabel('xposition');
-% figure;imagesc(freqaxis((NN-1)/2+1:NN),dgraxis,abs(antresponsearray(:,(NN-1)/2+1:NN)));xlabel('Frequency/GHz');ylabel('xposition');
-
-
+% antresponsearraymmax=max(max(antresponsearray));
+% figure;imagesc(freqaxis((NN-1)/2+1:NN),dgraxis,angle(antresponsearray(:,(NN-1)/2+1:NN)));xlabel('Frequency/GHz');ylabel('\theta');
+% figure;imagesc(freqaxis((NN-1)/2+1:NN)/1e9,dgraxis,abs(antresponsearray(:,(NN-1)/2+1:NN)/antresponsearraymmax));xlabel('Frequency/GHz');ylabel('\theta'); ax=gca;ax.FontSize=18;
+% figure;imagesc(freqaxis((NN-1)/2+1:NN)/1e9,sin(dgraxis/180*pi),abs(antresponsearray(:,(NN-1)/2+1:NN)/antresponsearraymmax));xlabel('时间频率/GHz');ylabel('归一化空间频率/m^{-1}'); ax=gca;ax.FontSize=18;
 
 
 
@@ -108,8 +109,9 @@ antresponsearray  = M201710ANTcalc( xposition, freqaxis, dgraxis, centerfreq, 0)
 %% 总响应
 allresponse=M201710AFcalc( netresponse, antresponsearray, xposition, freqaxis, dgraxis, dgrsection, freqsection, 1 );
 
-
-
+% allresponsemmax=max(max(allresponse));
+% figure;imagesc(freqaxis((NN-1)/2+1:NN)/1e9,dgraxis,abs(allresponse(:,(NN-1)/2+1:NN)));xlabel('Frequency/GHz');ylabel('\theta'); ax=gca;ax.FontSize=18;
+% figure;imagesc(freqaxis((NN-1)/2+1:NN)/1e9,sin(dgraxis/180*pi),abs(allresponse(:,(NN-1)/2+1:NN)/allresponsemmax));xlabel('时间频率/GHz');ylabel('归一化空间频率/m^{-1}'); ax=gca;ax.FontSize=18;
 
 
 %% 相关峰值方向图及品质因数

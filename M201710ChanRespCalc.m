@@ -68,7 +68,7 @@ end
 %% ideal TTD with null
 if 1.5==strunum 
     
-    nulldeg=10;
+    nulldeg=-45;
     
     dl0=-xposition*sin(aimtheta0)/c;
     dln=-xposition*sin(nulldeg/180*pi)/c;
@@ -244,7 +244,7 @@ if strunum > 10
     %         dstart=000;
     %         dend=90;
     %         d0=((xposition-xposition(1))/(xposition(end)-xposition(1))*(dend-dstart)+dstart).';%ps/nm
-            d0=(0:length(xposition)-1).'*40/3;
+            d0=(0:length(xposition)-1).'*30;
             b2=-lambda0^2/2/pi/c*d0/1e12*1e9;%1/s/s
             b1=0;
             b3=0;

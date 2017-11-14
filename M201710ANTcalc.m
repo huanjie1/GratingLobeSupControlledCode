@@ -22,8 +22,9 @@ end
 
 %% uniform half-dipole (centerfreq) array -.- -.- -.- .... -.- -.- -.-
 if 1==antnum
-    [wm,dgrm]=meshgrid(w,theta);
-    antresponsearray=( cos(wm/4/centerfreq.*sin(dgrm))- cos(wm/4/centerfreq) ) ./ (cos(dgrm)+1e-9);
+    al=c/centerfreq/2;
+    [wm,thtm]=meshgrid(w,theta);
+    antresponsearray=( cos(al*wm/2/c.*sin(thtm))- cos(al*wm/2/c) ) ./ (cos(thtm)+1e-9);
 end
 
 
