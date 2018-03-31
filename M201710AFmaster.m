@@ -5,15 +5,15 @@ clear
 
 
 %% 基础参数
-N=16;
+N=8;
 c=299792458;
 diffindex=0:(N-2);
 centerfreq=10e9;
 centerlambda=c/centerfreq;
-spacing0=0.5*centerlambda;
+spacing0=9.5*centerlambda;
 
-aimdegree0=60;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-nulldegree0=-30;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+aimdegree0=20;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+nulldegree0=20;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 %% 一维线阵布局
@@ -46,12 +46,12 @@ ts=1/2/40e9;
 t=-(NN-1)/2*ts : ts : ts*(NN-1)/2;
 
 % dgraxis=linspace(-90,90,37); %for waterfall
-% dgraxis=linspace(-90,90,721);
-dgraxis=asin(linspace(-1,1,721))*180/pi;
+dgraxis=linspace(-90,90,721);
+% dgraxis=asin(linspace(-1,1,721))*180/pi;
 
 % sigt1=cos( 2*pi*10e9*t + pi*10e9/(ts*NN)*t.^2);
 % sigt1=cos( 2*pi*10e9*t).* exp(-(t/0.1e-9).^2);
-sigt1=[zeros(1,2000) sigeneratorfor2d( t(2001:6001),  'lfm', 4e9, centerfreq ) zeros(1,2000)];
+sigt1=[zeros(1,2000) sigeneratorfor2d( t(2001:6001),  'lfm', 10e9, centerfreq ) zeros(1,2000)];
 
 sigf1=fft_plot( sigt1, ts, NN, 2 );
 
@@ -64,7 +64,7 @@ freqsection=35.1e9;
 
 %% 通道响应
 
-netresponse = M201710ChanRespCalc( xposition, freqaxis, aimdegree0, centerfreq, 13 );
+netresponse = M201710ChanRespCalc( xposition, freqaxis, aimdegree0, centerfreq, 1 );
 
 % % draw netresponse
 % figure;imagesc(freqaxis((NN-1)/2+1:NN),xposition,angle(netresponse(:,(NN-1)/2+1:NN)));xlabel('Frequency/GHz');ylabel('xposition');
@@ -94,7 +94,7 @@ netresponse = M201710ChanRespCalc( xposition, freqaxis, aimdegree0, centerfreq, 
 
 %% 天线响应
 
-antresponsearray  = M201710ANTcalc( xposition, freqaxis, dgraxis, centerfreq, 2);
+antresponsearray  = M201710ANTcalc( xposition, freqaxis, dgraxis, centerfreq, 0);
 
 % % draw antresponsearray
 % antresponsearraymmax=max(max(antresponsearray));
@@ -116,6 +116,8 @@ allresponse=M201710AFcalc( netresponse, antresponsearray, xposition, freqaxis, d
 
 %% 相关峰值方向图及品质因数
 
+M201710PATcalcIMG( allresponse, dgraxis, t,0, 0.5, sigt1, sigf1, 1 );
+
 [engue, cmpue]=M201710PATcalc( allresponse, dgraxis, t, sigt1, sigf1, 1 );
 
 fomcmpue=cmpFoMcalcV2( dgraxis, aimdegree0, cmpue, N, spacing0/centerlambda, 1 )
@@ -130,8 +132,8 @@ hfix=mask2./nullfull;
 
 netresponse2=(ones(N,1)*hfix).*netresponse20; 
 netresponsewn=netresponse-netresponse2;
-
-allresponse2 = M201710AFcalc( netresponse-netresponse2, [], xposition, freqaxis, dgraxis, dgrsection, freqsection, 1 );
+allresponseng = M201710AFcalc( netresponse2, [], xposition, freqaxis, dgraxis, dgrsection, freqsection, 1 );
+allresponse2 = M201710AFcalc( netresponsewn, [], xposition, freqaxis, dgraxis, dgrsection, freqsection, 1 );
 
 % % draw netresponse
 % figure;imagesc(freqaxis((NN-1)/2+1:NN),xposition,angle(netresponse2(:,(NN-1)/2+1:NN)));xlabel('Frequency/GHz');ylabel('xposition');

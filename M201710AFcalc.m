@@ -62,8 +62,8 @@ if fignum>0.5
     ylabel('\theta');
 %     rectangle('Position',[8.5,40,3,10],'Curvature',[1,1],'EdgeColor','r','linewidth',2)
     ax=gca;
-    ax.FontSize=18;
-    
+    ax.FontSize=13.5;
+%     xlim([5,15])
     colorbar;
     % set(gcf,'outerposition',get(0,'screensize'));
     
@@ -84,8 +84,8 @@ if fignum>0.5
 %     aa1=patch(sdx1,sdy1,'black','EdgeColor','none','facealpha',0.3);
 %     aa2=patch(sdx2,sdy2,'black','EdgeColor','none','facealpha',0.3);
 
-    figure;imagesc(w((NN-1)/2:NN)/2/pi/1E9,sin(theta),h(:,(NN-1)/2:NN));xlabel('时间频率/GHz');ylabel('归一化空间频率/m^{-1}');
-    ax=gca;ax.FontSize=18;
+%     figure;imagesc(w((NN-1)/2:NN)/2/pi/1E9,sin(theta),h(:,(NN-1)/2:NN));xlabel('时间频率/GHz');ylabel('归一化空间频率/m^{-1}');
+%     ax=gca;ax.FontSize=18;
     
 end
 

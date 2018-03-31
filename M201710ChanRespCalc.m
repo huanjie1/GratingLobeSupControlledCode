@@ -24,7 +24,7 @@ end
 %% ideal TTD
 if 1==strunum 
     dl0=-xposition*sin(aimtheta0)/c;
-    dl0=dl0-min(dl0);
+    dl0=dl0-mean(dl0);
     switchmode=0;
     
     if 0==switchmode % continue
