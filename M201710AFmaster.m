@@ -5,7 +5,7 @@ clear
 
 
 %% »ù´¡²ÎÊý
-N=8;
+N=2;
 c=299792458;
 diffindex=0:(N-2);
 centerfreq=10e9;
