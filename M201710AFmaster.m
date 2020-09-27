@@ -5,14 +5,14 @@ clear
 
 
 %% 基础参数
-N=2;
+N=50;
 c=299792458;
 diffindex=0:(N-2);
-centerfreq=10e9;
+centerfreq=4e9;
 centerlambda=c/centerfreq;
-spacing0=9.5*centerlambda;
+spacing0=0.5*centerlambda;
 
-aimdegree0=20;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+aimdegree0=0;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 nulldegree0=20;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -24,7 +24,7 @@ if strcmp(devimode,'squ')
     spacingdia=1*0.0000*diffindex.^2;%deviation from even spacing
     spacings=spacingdia-(min(spacingdia)+max(spacingdia))/2+spacing0;
 else
-    spacings=randn(1,N-1)*spacing0*0.2+spacing0;
+    spacings=randn(1,N-1)*spacing0*0.4+spacing0;
 end
 
 % spacings(1)=(spacings(1)+spacings(2))/(1+pi/2);
@@ -51,15 +51,15 @@ dgraxis=linspace(-90,90,721);
 
 % sigt1=cos( 2*pi*10e9*t + pi*10e9/(ts*NN)*t.^2);
 % sigt1=cos( 2*pi*10e9*t).* exp(-(t/0.1e-9).^2);
-sigt1=[zeros(1,2000) sigeneratorfor2d( t(2001:6001),  'lfm', 10e9, centerfreq ) zeros(1,2000)];
+sigt1=[zeros(1,2000) sigeneratorfor2d( t(2001:6001),  'lfm', 4e9, centerfreq ) zeros(1,2000)];
 
 sigf1=fft_plot( sigt1, ts, NN, 2 );
 
 % figure;plot(t,sigt1);
 % title('sig waveform');
 
-dgrsection=0;
-freqsection=35.1e9;
+dgrsection=aimdegree0;
+freqsection=centerfreq;
 
 
 %% 通道响应
@@ -107,7 +107,7 @@ antresponsearray  = M201710ANTcalc( xposition, freqaxis, dgraxis, centerfreq, 0)
 
 
 %% 总响应
-allresponse=M201710AFcalc( netresponse, antresponsearray, xposition, freqaxis, dgraxis, dgrsection, freqsection, 1 );
+allresponse=M201710AFcalc( netresponse, antresponsearray, xposition, freqaxis, dgraxis, dgrsection, freqsection, 3 );
 
 % allresponsemmax=max(max(allresponse));
 % figure;imagesc(freqaxis((NN-1)/2+1:NN)/1e9,dgraxis,abs(allresponse(:,(NN-1)/2+1:NN)));xlabel('Frequency/GHz');ylabel('\theta'); ax=gca;ax.FontSize=18;
@@ -119,6 +119,25 @@ allresponse=M201710AFcalc( netresponse, antresponsearray, xposition, freqaxis, d
 M201710PATcalcIMG( allresponse, dgraxis, t,0, 0.5, sigt1, sigf1, 1 );
 
 [engue, cmpue]=M201710PATcalc( allresponse, dgraxis, t, sigt1, sigf1, 1 );
+
+figure(126);polarplot(dgraxis/180*pi,20*log10(cmpue),'linewidth',2);hold on
+ax=gca;
+% ax.RTick=-pmin2+[-60 -40 -20 0];
+% ax.RTickLabel={'-60'; '-40'; '-20'; '0'};
+ax.ThetaTickLabel={'0'; '30'; '60';'90'; '120'; '150';'±180'; '-150'; '-120';'-90'; '-60'; '-30'};
+ax.ThetaZeroLocation='top';
+ax.FontSize=13;
+ax.LineWidth=1.7;
+ax.RLim=[-70 0];
+ax.RAxisLocation=-80;
+ax.ThetaDir = 'clockwise';
+
+xwidthdraw = profileAnalyzor1d(dgraxis, cmpue,'avg norm','measured',1/sqrt(2),1,1,30);
+xwidthdraw2 = profileAnalyzor1d(dgraxis, sqrt(engue),'avg norm','measured',1/sqrt(2),1,1,30);
+
+
+
+
 
 fomcmpue=cmpFoMcalcV2( dgraxis, aimdegree0, cmpue, N, spacing0/centerlambda, 1 )
 

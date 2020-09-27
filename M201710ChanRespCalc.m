@@ -26,6 +26,7 @@ if 1==strunum
     dl0=-xposition*sin(aimtheta0)/c;
     dl0=dl0-mean(dl0);
     switchmode=0;
+    delayerrormode=0;
     
     if 0==switchmode % continue
         dl=dl0;
@@ -40,10 +41,16 @@ if 1==strunum
         end            
     end
     
-%     arrayresponse=exp(1i*(dl).'*w);
-
-
-    arrayresponse0=exp(1i*(dl).'*w);
+    if 1==delayerrormode
+        rng default;
+        randnbase=randn(1,antennanum);
+        delayerror=12e-12*randnbase;
+        dl=dl+delayerror;
+    end
+    
+    
+%     arrayresponse0=(hamming(antennanum)*ones(1,NN)).*exp(1i*(dl).'*w);
+    arrayresponse0=(rectwin(antennanum)*ones(1,NN)).*exp(1i*(dl).'*w);
     
     ctrlnum=61;
     errlength=(NN-1)/2;

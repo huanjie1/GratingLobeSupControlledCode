@@ -74,10 +74,12 @@ if isempty(cmpuemaxspur)
     cmpuemaxspur=max(cmpuenm1([1:regionleft regionright:end]));
 end
 
+cmpFoM = (cmpuevar/idealcmpvar)^(-1)*(cmpuedia/idealdia)*(cmpuemaxspur/idealmaxspur)^(-1);
 
 if fignum>0
     figure;plot(drgaxis,cmpuenm1,drgaxis,idealcmpnm1,drgaxis,0.01*cmpuelmax,':');
-    text(-90,0.02,{['cmpuevar = ' num2str(cmpuevar)];...
+    text(-90,0.02,{['cmpFoM = ' num2str(cmpFoM)];...
+                   ['cmpuevar = ' num2str(cmpuevar)];...
                    ['idealcmpvar = ' num2str(idealcmpvar)];...
                    ['cmpuedia = ' num2str(cmpuedia)];...
                    ['idealdia = ' num2str(idealdia)];...
@@ -87,7 +89,7 @@ end
     
 
 
-cmpFoM = (cmpuevar/idealcmpvar)^(-1)*(cmpuedia/idealdia)*(cmpuemaxspur/idealmaxspur)^(-1);
+
 
     
 

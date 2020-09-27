@@ -102,9 +102,15 @@ if fignum>2
     winstr=freqsection*2*pi;%ÇÐÆ¬Î»ÖÃ
     [dfmin,findex]=min(abs(w-winstr));
     pfreq=allresponse(:,findex);
-    figure(999999);plot(theta/pi*180,abs(pfreq));hold on
+    pfreqdb=db(pfreq);
+    figure(999999);plot(theta/pi*180,pfreqdb);hold on
     title(['freq section @ freq = ' num2str(freqsection/1e9) 'GHz']);
     hfint=abs(allresponse(:,findex)).^2;
+    
+    pfreqminmax=sign( pfreqdb-pfreqdb([ 1 1:end-1]) ) + sign( pfreqdb-pfreqdb([ 2:end end]) );
+    peaksarray=sort(pfreqdb(pfreqminmax>1.5),'descend');
+    sidelobesup=peaksarray(1)-peaksarray(2);
+
 end
 
 % if fignum>3
